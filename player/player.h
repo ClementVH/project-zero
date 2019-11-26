@@ -21,8 +21,10 @@ Player* ConstructPlayer() {
     Camera* camera = (Camera*) malloc(sizeof(Camera));
     camera->position = (Vector3){ 10.0f, 15.0f, 8.0f };
     camera->target = (Vector3){ 0.0f, 0.0f, 0.0f };
+
     camera->up = (Vector3){ 0.0f, 1.0f, 0.0f };
-    camera->fovy = 60.0f;
+
+    camera->fovy = 40.0f;
     camera->type = CAMERA_ORTHOGRAPHIC;
 
     player->camera = camera;
@@ -69,6 +71,6 @@ void UpdatePlayer(Player* player) {
 void DrawPlayer(Player* player) {
     Vector3* playerPosition = player->position;
 
-    DrawCube(*playerPosition, 2.0f, 2.0f, 2.0f, RED);
+    DrawCube(*playerPosition, 2.0f, 2.0f, 2.0f, MAROON);
     DrawCubeWires(*playerPosition, 2.0f, 2.0f, 2.0f, MAROON);
 }

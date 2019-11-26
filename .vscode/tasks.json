@@ -9,7 +9,8 @@
             "command": "make",
             "args": [
                 "PLATFORM=PLATFORM_DESKTOP",
-                "BUILD_MODE=DEBUG"
+                "BUILD_MODE=DEBUG",
+                "OBJS=main.c player/player.h"
             ],
             "windows": {
                 "command": "C:/raylib/mingw/bin/mingw32-make.exe",
@@ -37,6 +38,7 @@
             "command": "make",
             "args": [
                 "PLATFORM=PLATFORM_DESKTOP",
+                "OBJS=main.c player/player.h"
             ],
             "windows": {
                 "command": "C:/raylib/mingw/bin/mingw32-make.exe",

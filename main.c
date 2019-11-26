@@ -13,6 +13,8 @@ int main()
     Player* player = ConstructPlayer();
     Camera* camera = player->camera;
 
+    Model model = LoadModel("archer.iqm");
+
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
@@ -29,8 +31,9 @@ int main()
 
             BeginMode3D(*camera);
 
-                DrawPlayer(player);
-                DrawGrid(10, 1.0f);
+                DrawModelEx(model, *(player->position), (Vector3){0.0f, 0.0f, 1.0f}, -90.0f, (Vector3){0.1f, 0.1f, 0.1f}, RED);
+                // DrawPlayer(player);
+                DrawGrid(50, 1.0f);
 
             EndMode3D();
 
@@ -41,6 +44,8 @@ int main()
         EndDrawing();
         //----------------------------------------------------------------------------------
     }
+
+    UnloadModel(model);
 
     // De-Initialization
     //--------------------------------------------------------------------------------------
