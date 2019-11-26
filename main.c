@@ -13,7 +13,9 @@ int main()
     Player* player = ConstructPlayer();
     Camera* camera = player->camera;
 
-    Model model = LoadModel("archer.iqm");
+    Model model = LoadModel("toto.iqm");
+    Texture2D texture = LoadTexture("textures/Erika_Archer_Clothes_diffuse.png");
+    SetMaterialTexture(&model.materials[0], MAP_DIFFUSE, texture);
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
@@ -31,7 +33,7 @@ int main()
 
             BeginMode3D(*camera);
 
-                DrawModelEx(model, *(player->position), (Vector3){0.0f, 0.0f, 1.0f}, -90.0f, (Vector3){0.1f, 0.1f, 0.1f}, RED);
+                DrawModelEx(model, *(player->position), (Vector3){1.0f, 0.0f, 0.0f}, -90.0f, (Vector3){0.1f, 0.1f, 0.1f}, WHITE);
                 // DrawPlayer(player);
                 DrawGrid(50, 1.0f);
 
