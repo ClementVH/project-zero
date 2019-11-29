@@ -8,7 +8,7 @@
 typedef struct Player {
     Vector3* position;
     Camera* camera;
-    Model* model;
+    Model model;
     ModelAnimation* anims;
     int animsCount;
     int animFrameCounter;
@@ -33,17 +33,16 @@ Player* ConstructPlayer() {
 
     player->camera = camera;
 
-    Model model = LoadModel("archer.iqm");
-    player->model = &model;
+    player->model = LoadModel("archer.iqm");
 
-    Texture2D texture = LoadTexture("../textures/Erika_Archer_Clothes_diffuse.png");    // Load model texture and set material
-    SetMaterialTexture(&model.materials[0], MAP_DIFFUSE, texture);
+    Texture2D texture = LoadTexture("textures/Erika_Archer_Clothes_diffuse.png");    // Load model texture and set material
+    SetMaterialTexture(&player->model.materials[0], MAP_DIFFUSE, texture);
 
     float pitch = 90.0f;
     float roll = 0.0f;
     float yaw = -45.0f;
 
-    model.transform = MatrixRotateXYZ((Vector3){DEG2RAD * pitch, DEG2RAD * yaw, DEG2RAD * roll});
+    player->model.transform = MatrixRotateXYZ((Vector3){DEG2RAD * pitch, DEG2RAD * yaw, DEG2RAD * roll});
 
     (*player).animsCount = 0;
     player->anims = LoadModelAnimations("archer.iqm", &(player->animsCount));
@@ -55,8 +54,9 @@ Player* ConstructPlayer() {
 void UpdatePlayer(Player* player) {
     Camera* camera = player->camera;
     Vector3* playerPosition = player->position;
-    Model* model = player->model;
+    Model model = player->model;
     ModelAnimation* anims = player->anims;
+    int* animFrameCounter = &player->animFrameCounter;
 
     UpdateCamera(camera);
 
@@ -89,14 +89,14 @@ void UpdatePlayer(Player* player) {
     camera->target.y = playerPosition->y;
     camera->target.z = playerPosition->z;
 
-    // player->animFrameCounter++;
-    UpdateModelAnimation(*model, anims[0], 0);
-    if (player->animFrameCounter >= anims[0].frameCount) player->animFrameCounter = 0;
+    (*animFrameCounter)++;
+    UpdateModelAnimation(model, anims[0], (*animFrameCounter));
+    if ((*animFrameCounter) >= anims[0].frameCount) (*animFrameCounter) = 0;
 }
 
 void DrawPlayer(Player* player) {
     Vector3* playerPosition = player->position;
+    Model model = player->model;
 
-    DrawCube(*playerPosition, 2.0f, 2.0f, 2.0f, MAROON);
-    DrawCubeWires(*playerPosition, 2.0f, 2.0f, 2.0f, MAROON);
+    DrawModel(model, *playerPosition, 0.04f, WHITE);
 }
