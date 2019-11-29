@@ -33,9 +33,9 @@ Player* ConstructPlayer() {
 
     player->camera = camera;
 
-    player->model = LoadModel("archer.iqm");
+    player->model = LoadModel("assets/player/models/archer-model.iqm");
 
-    Texture2D texture = LoadTexture("textures/Erika_Archer_Clothes_diffuse.png");    // Load model texture and set material
+    Texture2D texture = LoadTexture("assets/player/textures/player-diffuse.png");    // Load model texture and set material
     SetMaterialTexture(&player->model.materials[0], MAP_DIFFUSE, texture);
 
     float pitch = 90.0f;
@@ -45,7 +45,7 @@ Player* ConstructPlayer() {
     player->model.transform = MatrixRotateXYZ((Vector3){DEG2RAD * pitch, DEG2RAD * yaw, DEG2RAD * roll});
 
     (*player).animsCount = 0;
-    player->anims = LoadModelAnimations("archer.iqm", &(player->animsCount));
+    player->anims = LoadModelAnimations("assets/player/animations/idle.iqm", &(player->animsCount));
     (*player).animFrameCounter = 0;
 
     return player;
