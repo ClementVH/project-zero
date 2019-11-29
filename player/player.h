@@ -8,6 +8,10 @@
 typedef struct Player {
     Vector3* position;
     Camera* camera;
+    Model* model;
+    ModelAnimation* anims;
+    int animsCount;
+    int animFrameCounter;
 } Player;
 
 Player* ConstructPlayer() {
@@ -29,12 +33,30 @@ Player* ConstructPlayer() {
 
     player->camera = camera;
 
+    Model model = LoadModel("archer.iqm");
+    player->model = &model;
+
+    Texture2D texture = LoadTexture("../textures/Erika_Archer_Clothes_diffuse.png");    // Load model texture and set material
+    SetMaterialTexture(&model.materials[0], MAP_DIFFUSE, texture);
+
+    float pitch = 90.0f;
+    float roll = 0.0f;
+    float yaw = -45.0f;
+
+    model.transform = MatrixRotateXYZ((Vector3){DEG2RAD * pitch, DEG2RAD * yaw, DEG2RAD * roll});
+
+    (*player).animsCount = 0;
+    player->anims = LoadModelAnimations("archer.iqm", &(player->animsCount));
+    (*player).animFrameCounter = 0;
+
     return player;
 }
 
 void UpdatePlayer(Player* player) {
     Camera* camera = player->camera;
     Vector3* playerPosition = player->position;
+    Model* model = player->model;
+    ModelAnimation* anims = player->anims;
 
     UpdateCamera(camera);
 
@@ -66,6 +88,10 @@ void UpdatePlayer(Player* player) {
     camera->target.x = playerPosition->x;
     camera->target.y = playerPosition->y;
     camera->target.z = playerPosition->z;
+
+    // player->animFrameCounter++;
+    UpdateModelAnimation(*model, anims[0], 0);
+    if (player->animFrameCounter >= anims[0].frameCount) player->animFrameCounter = 0;
 }
 
 void DrawPlayer(Player* player) {

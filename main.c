@@ -12,8 +12,22 @@ int main()
 
     Player* player = ConstructPlayer();
     Camera* camera = player->camera;
+    Model* model = player->model;
 
-    Model model = LoadModel("archer.iqm");
+    // float pitch = 90.0f;
+    // float roll = 0.0f;
+    // float yaw = -45.0f;
+
+    // Model model = LoadModel("archer.iqm");
+
+    // Texture2D texture = LoadTexture("textures/Erika_Archer_Clothes_diffuse.png");    // Load model texture and set material
+    // SetMaterialTexture(&model.materials[0], MAP_DIFFUSE, texture);
+
+    // model.transform = MatrixRotateXYZ((Vector3){DEG2RAD*pitch,DEG2RAD*yaw,DEG2RAD*roll});
+
+    // int animsCount = 0;
+    // ModelAnimation *anims = LoadModelAnimations("archer.iqm", &animsCount);
+    // int animFrameCounter = 0;
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
@@ -23,6 +37,10 @@ int main()
     {
         UpdatePlayer(player);
 
+        // animFrameCounter++;
+        // UpdateModelAnimation(model, anims[0], animFrameCounter);
+        // if (animFrameCounter >= anims[0].frameCount) animFrameCounter = 0;
+
         // Draw
         //----------------------------------------------------------------------------------
         BeginDrawing();
@@ -31,8 +49,8 @@ int main()
 
             BeginMode3D(*camera);
 
-                DrawModelEx(model, *(player->position), (Vector3){0.0f, 0.0f, 1.0f}, -90.0f, (Vector3){0.1f, 0.1f, 0.1f}, RED);
-                // DrawPlayer(player);
+                // DrawModel(model, *(player->position), 0.04f, WHITE);
+                DrawPlayer(player);
                 DrawGrid(50, 1.0f);
 
             EndMode3D();
@@ -45,7 +63,7 @@ int main()
         //----------------------------------------------------------------------------------
     }
 
-    UnloadModel(model);
+    UnloadModel(*model);
 
     // De-Initialization
     //--------------------------------------------------------------------------------------
