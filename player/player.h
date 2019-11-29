@@ -5,6 +5,12 @@
 #include "raylib.h"
 #include "raymath.h"
 
+float pitch = 90.0f;
+float roll = 0.0f;
+float yaw = -45.0f;
+
+void RotateModelForward(Model model, Vector3 forward);
+
 typedef struct Player {
     Vector3* position;
     Camera* camera;
@@ -38,11 +44,7 @@ Player* ConstructPlayer() {
     Texture2D texture = LoadTexture("assets/player/textures/player-diffuse.png");    // Load model texture and set material
     SetMaterialTexture(&player->model.materials[0], MAP_DIFFUSE, texture);
 
-    float pitch = 90.0f;
-    float roll = 0.0f;
-    float yaw = -45.0f;
-
-    player->model.transform = MatrixRotateXYZ((Vector3){DEG2RAD * pitch, DEG2RAD * yaw, DEG2RAD * roll});
+    // player->model.transform = MatrixRotateXYZ((Vector3){DEG2RAD * pitch, DEG2RAD * yaw, DEG2RAD * roll});
 
     (*player).animsCount = 0;
     player->anims = LoadModelAnimations("assets/player/animations/idle.iqm", &(player->animsCount));
@@ -57,6 +59,7 @@ void UpdatePlayer(Player* player) {
     Model model = player->model;
     ModelAnimation* anims = player->anims;
     int* animFrameCounter = &player->animFrameCounter;
+    Vector3 previousPosition = *playerPosition;
 
     UpdateCamera(camera);
 
@@ -89,6 +92,11 @@ void UpdatePlayer(Player* player) {
     camera->target.y = playerPosition->y;
     camera->target.z = playerPosition->z;
 
+    Vector3 playerForward = Vector3Normalize(Vector3Subtract(*playerPosition, previousPosition));
+    RotateModelForward(model, playerForward);
+
+    // printf("%f %f\n", playerForward.x, playerForward.z);
+
     (*animFrameCounter)++;
     UpdateModelAnimation(model, anims[0], (*animFrameCounter));
     if ((*animFrameCounter) >= anims[0].frameCount) (*animFrameCounter) = 0;
@@ -99,4 +107,14 @@ void DrawPlayer(Player* player) {
     Model model = player->model;
 
     DrawModel(model, *playerPosition, 0.04f, WHITE);
+}
+
+
+void RotateModelForward(Model model, Vector3 forward) {
+    Vector2 old = (Vector2){0.0f, 1.0f};
+    Vector2 new = (Vector2){forward.x, forward.z};
+
+    float angle = Vector2Angle(old, new);
+    printf("%f\n", angle);
+    model.transform = MatrixRotateXYZ((Vector3){DEG2RAD * pitch, DEG2RAD * yaw, DEG2RAD * roll});
 }
