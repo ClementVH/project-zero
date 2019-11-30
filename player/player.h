@@ -7,9 +7,7 @@
 
 float pitch = 90.0f;
 float roll = 0.0f;
-float yaw = -45.0f;
-
-void RotateModelForward(Model model, Vector3 forward);
+float yaw = 0.0f;
 
 typedef struct Player {
     Vector3* position;
@@ -19,6 +17,8 @@ typedef struct Player {
     int animsCount;
     int animFrameCounter;
 } Player;
+
+void RotateModelForward(Player* player, Vector3 forward);
 
 Player* ConstructPlayer() {
     Player* player = (Player*) malloc(sizeof(Player));
@@ -41,13 +41,13 @@ Player* ConstructPlayer() {
 
     player->model = LoadModel("assets/player/models/archer-model.iqm");
 
+    player->model.transform = MatrixRotateXYZ((Vector3){DEG2RAD*pitch,DEG2RAD*yaw,DEG2RAD*roll});
+
     Texture2D texture = LoadTexture("assets/player/textures/player-diffuse.png");    // Load model texture and set material
     SetMaterialTexture(&player->model.materials[0], MAP_DIFFUSE, texture);
 
-    // player->model.transform = MatrixRotateXYZ((Vector3){DEG2RAD * pitch, DEG2RAD * yaw, DEG2RAD * roll});
-
     (*player).animsCount = 0;
-    player->anims = LoadModelAnimations("assets/player/animations/idle.iqm", &(player->animsCount));
+    player->anims = LoadModelAnimations("assets/player/animations/walking.iqm", &(player->animsCount));
     (*player).animFrameCounter = 0;
 
     return player;
@@ -68,34 +68,35 @@ void UpdatePlayer(Player* player) {
     Vector3 forwardNormalized = Vector3Normalize(forward);
     Vector3 sidewayNormalized = {-forwardNormalized.z, 0, forwardNormalized.x};
 
+    Vector3 movement = (Vector3){ 0.0f, 0.0f, 0.0f };
+
     if (IsKeyDown(KEY_A)) {
-        *playerPosition = Vector3Add(*playerPosition, Vector3Multiply(sidewayNormalized, -0.2f));
-        camera->position = Vector3Add(camera->position, Vector3Multiply(sidewayNormalized, -0.2f));
+        movement = Vector3Subtract(movement, sidewayNormalized);
     }
 
     if (IsKeyDown(KEY_D)) {
-        *playerPosition = Vector3Add(*playerPosition, Vector3Multiply(sidewayNormalized, 0.2f));
-        camera->position = Vector3Add(camera->position, Vector3Multiply(sidewayNormalized, 0.2f));
+        movement = Vector3Add(movement, sidewayNormalized);
     }
 
     if (IsKeyDown(KEY_S)) {
-        *playerPosition = Vector3Add(*playerPosition, Vector3Multiply(forwardNormalized, -0.2f));
-        camera->position = Vector3Add(camera->position, Vector3Multiply(forwardNormalized, -0.2f));
+        movement = Vector3Subtract(movement, forwardNormalized);
     }
 
     if (IsKeyDown(KEY_W)) {
-        *playerPosition = Vector3Add(*playerPosition, Vector3Multiply(forwardNormalized, 0.2f));
-        camera->position = Vector3Add(camera->position, Vector3Multiply(forwardNormalized, 0.2f));
+        movement = Vector3Add(movement, forwardNormalized);
     }
+
+    float speed = 0.13f;
+    movement = Vector3Multiply(Vector3Normalize(movement), speed);
+    *playerPosition = Vector3Add(*playerPosition, movement);
+    camera->position = Vector3Add(camera->position, movement);
 
     camera->target.x = playerPosition->x;
     camera->target.y = playerPosition->y;
     camera->target.z = playerPosition->z;
 
     Vector3 playerForward = Vector3Normalize(Vector3Subtract(*playerPosition, previousPosition));
-    RotateModelForward(model, playerForward);
-
-    // printf("%f %f\n", playerForward.x, playerForward.z);
+    RotateModelForward(player, playerForward);
 
     (*animFrameCounter)++;
     UpdateModelAnimation(model, anims[0], (*animFrameCounter));
@@ -110,11 +111,15 @@ void DrawPlayer(Player* player) {
 }
 
 
-void RotateModelForward(Model model, Vector3 forward) {
-    Vector2 old = (Vector2){0.0f, 1.0f};
-    Vector2 new = (Vector2){forward.x, forward.z};
+void RotateModelForward(Player* player, Vector3 forward) {
+    Vector2 refOrientation = (Vector2){0.0f, 1.0f};
+    Vector2 targetOrientation = (Vector2){forward.x, forward.z};
 
-    float angle = Vector2Angle(old, new);
-    printf("%f\n", angle);
-    model.transform = MatrixRotateXYZ((Vector3){DEG2RAD * pitch, DEG2RAD * yaw, DEG2RAD * roll});
+    if (targetOrientation.x == 0.0f && targetOrientation.y == 0.0f) {
+        return;
+    }
+
+    float angle = atan2(refOrientation.x, refOrientation.y) - atan2(targetOrientation.x, targetOrientation.y);
+
+    player->model.transform = MatrixRotateXYZ((Vector3){DEG2RAD*pitch,angle,DEG2RAD*roll});
 }
