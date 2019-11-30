@@ -13,12 +13,16 @@ typedef struct Player {
     Vector3* position;
     Camera* camera;
     Model model;
-    ModelAnimation* anims;
-    int animsCount;
+    ModelAnimation* anims[3];
     int animFrameCounter;
+    int currentAnimation;
 } Player;
 
 void RotateModelForward(Player* player, Vector3 forward);
+
+int ANIM_IDLE = 0;
+int ANIM_WALKING = 1;
+int ANIM_RUNNING = 2;
 
 Player* ConstructPlayer() {
     Player* player = (Player*) malloc(sizeof(Player));
@@ -46,9 +50,13 @@ Player* ConstructPlayer() {
     Texture2D texture = LoadTexture("assets/player/textures/player-diffuse.png");    // Load model texture and set material
     SetMaterialTexture(&player->model.materials[0], MAP_DIFFUSE, texture);
 
-    (*player).animsCount = 0;
-    player->anims = LoadModelAnimations("assets/player/animations/walking.iqm", &(player->animsCount));
+    int animsCount = 0;
+    player->anims[ANIM_IDLE] = LoadModelAnimations("assets/player/animations/idle.iqm", &animsCount);
+    player->anims[ANIM_WALKING] = LoadModelAnimations("assets/player/animations/walking.iqm", &animsCount);
+    player->anims[ANIM_RUNNING] = LoadModelAnimations("assets/player/animations/running.iqm", &animsCount);
     (*player).animFrameCounter = 0;
+
+    player->currentAnimation = ANIM_IDLE;
 
     return player;
 }
@@ -57,8 +65,7 @@ void UpdatePlayer(Player* player) {
     Camera* camera = player->camera;
     Vector3* playerPosition = player->position;
     Model model = player->model;
-    ModelAnimation* anims = player->anims;
-    int* animFrameCounter = &player->animFrameCounter;
+    ModelAnimation** anims = player->anims;
     Vector3 previousPosition = *playerPosition;
 
     UpdateCamera(camera);
@@ -86,7 +93,24 @@ void UpdatePlayer(Player* player) {
         movement = Vector3Add(movement, forwardNormalized);
     }
 
-    float speed = 0.13f;
+    float speed = 0.0f;
+    int animation = ANIM_IDLE;
+
+    if (Vector3Length(movement) > 0.0f) {
+        animation = ANIM_WALKING;
+        speed = 0.11f;
+
+        if (IsKeyDown(KEY_LEFT_SHIFT)) {
+            animation = ANIM_RUNNING;
+            speed = 0.26f;
+        }
+    }
+
+    if (animation != player->currentAnimation) {
+        player->currentAnimation = animation;
+        player->animFrameCounter = 0;
+    }
+
     movement = Vector3Multiply(Vector3Normalize(movement), speed);
     *playerPosition = Vector3Add(*playerPosition, movement);
     camera->position = Vector3Add(camera->position, movement);
@@ -98,9 +122,9 @@ void UpdatePlayer(Player* player) {
     Vector3 playerForward = Vector3Normalize(Vector3Subtract(*playerPosition, previousPosition));
     RotateModelForward(player, playerForward);
 
-    (*animFrameCounter)++;
-    UpdateModelAnimation(model, anims[0], (*animFrameCounter));
-    if ((*animFrameCounter) >= anims[0].frameCount) (*animFrameCounter) = 0;
+    player->animFrameCounter++;
+    UpdateModelAnimation(model, *anims[player->currentAnimation], player->animFrameCounter);
+    if (player->animFrameCounter >= (*anims[player->currentAnimation]).frameCount) player->animFrameCounter = 0;
 }
 
 void DrawPlayer(Player* player) {
