@@ -1,5 +1,10 @@
+#include <stdlib.h>
+#include <stdio.h>
 #include "raylib.h"
 #include "./player/player.h"
+#include "./particle/system.h"
+#include "./particle/renderer.h"
+#include "./particle/emitter.h"
 
 int main()
 {
@@ -17,6 +22,12 @@ int main()
     Camera* camera = player->camera;
     Model model = player->model;
 
+    ParticleSystem* system = ConstructParticleSystem();
+    Texture2D particleTexture = LoadTexture("assets/particle/point-light.png");
+    int blending = BLEND_ALPHA;
+
+    addParticleEmitter(system, basicEmitter);
+
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
@@ -24,6 +35,7 @@ int main()
     while (!WindowShouldClose())    // Detect window close button or ESC keyZZ
     {
         UpdatePlayer(player);
+        updateParticleSystem(system);
 
         // Draw
         //----------------------------------------------------------------------------------
@@ -32,13 +44,16 @@ int main()
             ClearBackground(RAYWHITE);
 
             BeginMode3D(*camera);
-
-                DrawPlayer(player);
                 DrawGrid(50, 1.0f);
+                DrawPlayer(player);
 
+
+                BeginBlendMode(blending);
+                    for (int i = 0; i < system->particles->countAlive; i++) {
+                        DrawParticle(*camera, particleTexture, system->particles->pos[i], system->particles->size[i], RED);
+                    }
+                EndBlendMode();
             EndMode3D();
-
-            DrawText("This is a raylib example", 10, 40, 20, DARKGRAY);
 
             DrawFPS(10, 10);
 
