@@ -5,6 +5,7 @@
 #include "./particle/system.h"
 #include "./particle/renderer.h"
 #include "./particle/emitter.h"
+#include "./particle/updater.h"
 
 int main()
 {
@@ -26,7 +27,10 @@ int main()
     Texture2D particleTexture = LoadTexture("assets/particle/point-light.png");
     int blending = BLEND_ALPHA;
 
+    ParticleEmitter basicEmitter = getBasicEmitter();
+
     addParticleEmitter(system, basicEmitter);
+    addParticleUpdater(system, basicUpdater);
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
