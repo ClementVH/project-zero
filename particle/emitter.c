@@ -9,7 +9,14 @@
 void emitParticle(ParticleData* particles, ParticleEmitter* emitter) {
     int startId = particles->countAlive;
 
-    if (emitter->duration > 0.0f && emitter->totalTime >= emitter->duration) {
+    emitter->timeBuffer += GetFrameTime();
+    emitter->totalTime += GetFrameTime();
+
+    if (emitter->delay > 0.0f && emitter->totalTime < emitter->delay) {
+        return;
+    }
+
+    if (emitter->duration > 0.0f && emitter->totalTime >= emitter->duration + emitter->delay) {
         return;
     }
 
@@ -29,9 +36,6 @@ void emitParticle(ParticleData* particles, ParticleEmitter* emitter) {
         emitter->timeBuffer = 0.0f;
 
     }
-
-    emitter->timeBuffer += GetFrameTime();
-    emitter->totalTime += GetFrameTime();
 }
 
 ParticleEmitter* ConstructParticleEmitter() {

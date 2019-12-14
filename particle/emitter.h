@@ -9,6 +9,7 @@ typedef struct ParticleEmitter {
 
     float totalTime;
     float duration;
+    float delay;
 
     ParticleGenerator** generators;
     int countGenerators;
