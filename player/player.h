@@ -40,7 +40,7 @@ Player* ConstructPlayer() {
 
     camera->fovy = 40.0f;
     camera->type = CAMERA_ORTHOGRAPHIC;
-    SetCameraMode(*camera, CAMERA_ORBITAL);
+    SetCameraMode(*camera, CAMERA_FREE);
 
     player->camera = camera;
 

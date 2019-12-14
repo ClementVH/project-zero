@@ -7,9 +7,9 @@
 
 typedef struct ParticleSystem {
     ParticleData* particles;
-    ParticleEmitter* emitters;
+    ParticleEmitter** emitters;
     int countEmitters;
-    ParticleUpdater* updaters;
+    ParticleUpdater** updaters;
     int countUpdaters;
 } ParticleSystem;
 
@@ -17,7 +17,7 @@ ParticleSystem* ConstructParticleSystem();
 
 void updateParticleSystem(ParticleSystem* system);
 
-void addParticleEmitter(ParticleSystem* system, ParticleEmitter emitter);
-void addParticleUpdater(ParticleSystem* system, ParticleUpdater updater);
+void addParticleEmitter(ParticleSystem* system, ParticleEmitter* emitter);
+void addParticleUpdater(ParticleSystem* system, ParticleUpdater* updater);
 
 #endif

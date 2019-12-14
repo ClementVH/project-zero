@@ -1,14 +1,18 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 #include "raylib.h"
 #include "./player/player.h"
 #include "./particle/system.h"
 #include "./particle/renderer.h"
 #include "./particle/emitter.h"
 #include "./particle/updater.h"
+#include "./particle/generator.h"
 
 int main()
 {
+    time_t t;
+    srand((unsigned) time(&t));
     // Initialization
     //--------------------------------------------------------------------------------------
     const int screenWidth = 1920;
@@ -28,9 +32,17 @@ int main()
     int blending = BLEND_ALPHA;
 
     ParticleEmitter basicEmitter = getBasicEmitter();
+    BasicEmitterData* emitterData = (BasicEmitterData*) basicEmitter.emitterData;
+    emitterData->emitRate = 5.0f;
 
-    addParticleEmitter(system, basicEmitter);
-    addParticleUpdater(system, basicUpdater);
+    ParticleGenerator sphericalGenerator = getSphericalGenerator();
+    SphericalGeneratorData* generatorData = (SphericalGeneratorData*) sphericalGenerator.generatorData;
+    generatorData->center = (Vector3){1.0f, 1.0f, 1.0f};
+    generatorData->radius = 1.0f;
+    addParticleGenerator(&basicEmitter, &sphericalGenerator);
+
+    addParticleEmitter(system, &basicEmitter);
+    addParticleUpdater(system, &basicUpdater);
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------

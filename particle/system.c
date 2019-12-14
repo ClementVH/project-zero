@@ -1,5 +1,6 @@
-#include "stdlib.h"
-#include "stdio.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdint.h>
 #include "particle/particle.h"
 #include "particle/system.h"
 #include "particle/updater.h"
@@ -16,12 +17,12 @@ ParticleSystem* ConstructParticleSystem() {
     system->particles = particles;
     particles->countAlive = 0;
 
-    ParticleEmitter* emitters = (ParticleEmitter*) malloc(sizeof(ParticleEmitter));
+    ParticleEmitter** emitters = (ParticleEmitter**) malloc(sizeof(ParticleEmitter*) * 100);
 
     system->emitters = emitters;
     system->countEmitters = 0;
 
-    ParticleUpdater* updaters = (ParticleUpdater*) malloc(sizeof(ParticleUpdater));
+    ParticleUpdater** updaters = (ParticleUpdater**) malloc(sizeof(ParticleUpdater*) * 100);
 
     system->updaters = updaters;
     system->countUpdaters = 0;
@@ -32,23 +33,23 @@ ParticleSystem* ConstructParticleSystem() {
 void updateParticleSystem(ParticleSystem* system) {
 
     for (int i = 0; i < system->countEmitters; ++i) {
-        system->emitters[i].emit(system->particles, system->emitters->emitterData);
+        system->emitters[i]->emit(system->particles, (intptr_t) system->emitters[i]);
     }
 
     for (int i = 0; i < system->countUpdaters; ++i) {
-        system->updaters[i].update(system->particles);
+        system->updaters[i]->update(system->particles);
     }
 
 }
 
-void addParticleEmitter(ParticleSystem* system, ParticleEmitter emitter) {
+void addParticleEmitter(ParticleSystem* system, ParticleEmitter* emitter) {
 
     system->emitters[system->countEmitters] = emitter;
 
     system->countEmitters = system->countEmitters + 1;
 }
 
-void addParticleUpdater(ParticleSystem* system, ParticleUpdater updater) {
+void addParticleUpdater(ParticleSystem* system, ParticleUpdater* updater) {
 
     system->updaters[system->countUpdaters] = updater;
 
