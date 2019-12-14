@@ -2,10 +2,11 @@
 #include "particle/updater.h"
 #include "particle/particle.h"
 
-void _basicUpdater(ParticleData* particles) {
+void _basicUpdater(ParticleData* particleData) {
 
-    for (int i = 0; i < particles->countAlive; i++) {
-        particles->pos[i] = Vector3Add(particles->pos[i], Vector3Scale(particles->vel[i], 0.16f));
+    for (int i = 0; i < particleData->countAlive; i++) {
+        particleData->particles[i].pos =
+            Vector3Add(particleData->particles[i].pos, Vector3Scale(particleData->particles[i].vel, 0.16f));
     }
 
 }

@@ -6,7 +6,7 @@
 #include "particle/updater.h"
 
 typedef struct ParticleSystem {
-    ParticleData* particles;
+    ParticleData* particleData;
     ParticleEmitter** emitters;
     int countEmitters;
     ParticleUpdater** updaters;

@@ -5,7 +5,7 @@
 #include "particle/particle.h"
 #include "particle/generator.h"
 
-void sphericalGenerator(ParticleData* particles, int startId, int endId, ParticleGenerator* generator) {
+void sphericalGenerator(ParticleData* particleData, int startId, int endId, ParticleGenerator* generator) {
     SphericalGeneratorData* data = (SphericalGeneratorData*) generator->generatorData;
 
     for (int i = startId; i < endId; i++) {
@@ -20,12 +20,12 @@ void sphericalGenerator(ParticleData* particles, int startId, int endId, Particl
             data->radius * cosf(phi)
         };
 
-        particles->pos[i] = (Vector3) {
+        particleData->particles[i].pos = (Vector3) {
             point.x + data->center.x,
             point.y + data->center.y,
             point.z + data->center.z
         };
-        particles->vel[i] = Vector3Normalize(point);
+        particleData->particles[i].vel = Vector3Normalize(point);
     }
 }
 

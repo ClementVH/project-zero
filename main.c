@@ -66,8 +66,9 @@ int main()
 
 
                 BeginBlendMode(blending);
-                    for (int i = 0; i < system->particles->countAlive; i++) {
-                        DrawParticle(*camera, particleTexture, system->particles->pos[i], system->particles->size[i], RED);
+                    ParticleData* particleData = system->particleData;
+                    for (int i = 0; i < particleData->countAlive; i++) {
+                        DrawParticle(*camera, particleTexture, particleData->particles[i].pos, particleData->particles[i].size, RED);
                     }
                 EndBlendMode();
             EndMode3D();

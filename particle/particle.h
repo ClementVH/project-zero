@@ -4,14 +4,18 @@
 
 #define MAX_PARTICLE_COUNT 10000
 
+typedef struct Particle {
+    Vector3 pos;
+    Vector3 vel;
+    Vector3 acc;
+    bool alive;
+    float alpha;
+    float size;
+    float rotation;
+} Particle;
+
 typedef struct ParticleData {
-    Vector3 pos[MAX_PARTICLE_COUNT];
-    Vector3 vel[MAX_PARTICLE_COUNT];
-    Vector3 acc[MAX_PARTICLE_COUNT];
-    bool alive[MAX_PARTICLE_COUNT];
-    float alpha[MAX_PARTICLE_COUNT];
-    float size[MAX_PARTICLE_COUNT];
-    float rotation[MAX_PARTICLE_COUNT];
+    Particle particles[MAX_PARTICLE_COUNT];
     int countAlive;
 } ParticleData;
 

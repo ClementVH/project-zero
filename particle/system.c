@@ -7,14 +7,14 @@
 ParticleSystem* ConstructParticleSystem() {
     ParticleSystem* system = (ParticleSystem*) malloc(sizeof(ParticleSystem));
 
-    ParticleData* particles = (ParticleData*) malloc(sizeof(ParticleData));
+    ParticleData* particleData = (ParticleData*) malloc(sizeof(ParticleData));
 
     for (int i = 0; i < MAX_PARTICLE_COUNT; ++i) {
-        particles->alive[i] = false;
+        particleData->particles[i].alive = false;
     }
 
-    system->particles = particles;
-    particles->countAlive = 0;
+    system->particleData = particleData;
+    particleData->countAlive = 0;
 
     ParticleEmitter** emitters = (ParticleEmitter**) malloc(sizeof(ParticleEmitter*) * 100);
 
@@ -32,11 +32,11 @@ ParticleSystem* ConstructParticleSystem() {
 void updateParticleSystem(ParticleSystem* system) {
 
     for (int i = 0; i < system->countEmitters; ++i) {
-        emitParticle(system->particles, system->emitters[i]);
+        emitParticle(system->particleData, system->emitters[i]);
     }
 
     for (int i = 0; i < system->countUpdaters; ++i) {
-        system->updaters[i]->update(system->particles);
+        system->updaters[i]->update(system->particleData);
     }
 
 }

@@ -6,8 +6,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-void emitParticle(ParticleData* particles, ParticleEmitter* emitter) {
-    int startId = particles->countAlive;
+void emitParticle(ParticleData* particleData, ParticleEmitter* emitter) {
+    int startId = particleData->countAlive;
 
     emitter->timeBuffer += GetFrameTime();
     emitter->totalTime += GetFrameTime();
@@ -24,13 +24,13 @@ void emitParticle(ParticleData* particles, ParticleEmitter* emitter) {
         int endId = Clamp(startId + emitter->timeBuffer * emitter->emitRate, startId, MAX_PARTICLE_COUNT);
 
         for (int i = 0; i < emitter->countGenerators; i++) {
-            emitter->generators[i]->generate(particles, startId, endId, emitter->generators[i]);
+            emitter->generators[i]->generate(particleData, startId, endId, emitter->generators[i]);
         }
 
         for (int i = startId; i < endId; i++) {
-            particles->countAlive++;
-            particles->alive[i] = true;
-            particles->size[i] = 0.8f;
+            particleData->countAlive++;
+            particleData->particles[i].alive = true;
+            particleData->particles[i].size = 0.8f;
         }
 
         emitter->timeBuffer = 0.0f;
