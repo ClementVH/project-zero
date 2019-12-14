@@ -2,7 +2,7 @@
 #define FILE_PARTICLE_SEEN
 #include "raylib.h"
 
-#define MAX_PARTICLE_COUNT 100
+#define MAX_PARTICLE_COUNT 10000
 
 typedef struct ParticleData {
     Vector3 pos[MAX_PARTICLE_COUNT];

@@ -33,7 +33,7 @@ int main()
 
     ParticleEmitter basicEmitter = getBasicEmitter();
     BasicEmitterData* emitterData = (BasicEmitterData*) basicEmitter.emitterData;
-    emitterData->emitRate = 5.0f;
+    emitterData->emitRate = 10.0f;
 
     ParticleGenerator sphericalGenerator = getSphericalGenerator();
     SphericalGeneratorData* generatorData = (SphericalGeneratorData*) sphericalGenerator.generatorData;
