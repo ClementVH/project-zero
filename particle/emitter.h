@@ -5,7 +5,10 @@
 
 typedef struct ParticleEmitter {
     float emitRate;
-    float timeAccumulator;
+    float timeBuffer;
+
+    float totalTime;
+    float duration;
 
     ParticleGenerator** generators;
     int countGenerators;

@@ -9,13 +9,12 @@
 void emitParticle(ParticleData* particles, ParticleEmitter* emitter) {
     int startId = particles->countAlive;
 
-    float deltaTimeAccumulated = GetFrameTime() + emitter->timeAccumulator;
+    if (emitter->duration > 0.0f && emitter->totalTime >= emitter->duration) {
+        return;
+    }
 
-    if (deltaTimeAccumulated > 1.0f / emitter->emitRate) {
-        emitter->timeAccumulator = 0.0f;
-
-        int endId = Clamp(startId + deltaTimeAccumulated * emitter->emitRate, startId, MAX_PARTICLE_COUNT);
-
+    if (emitter->timeBuffer > 1.0f / emitter->emitRate) {
+        int endId = Clamp(startId + emitter->timeBuffer * emitter->emitRate, startId, MAX_PARTICLE_COUNT);
 
         for (int i = 0; i < emitter->countGenerators; i++) {
             emitter->generators[i]->generate(particles, startId, endId, emitter->generators[i]);
@@ -27,16 +26,22 @@ void emitParticle(ParticleData* particles, ParticleEmitter* emitter) {
             particles->size[i] = 0.8f;
         }
 
-    } else {
-        emitter->timeAccumulator = deltaTimeAccumulated;
+        emitter->timeBuffer = 0.0f;
+
     }
+
+    emitter->timeBuffer += GetFrameTime();
+    emitter->totalTime += GetFrameTime();
 }
 
 ParticleEmitter* ConstructParticleEmitter() {
     ParticleEmitter* emitter = (ParticleEmitter*) malloc(sizeof(ParticleEmitter));
 
     emitter->emitRate = 1.0f;
-    emitter->timeAccumulator = 0.0f;
+    emitter->timeBuffer = 0.0f;
+
+    emitter->totalTime = 0.0f;
+    emitter->duration = 0.0f;
 
     ParticleGenerator** generators = (ParticleGenerator**) malloc(sizeof(ParticleGenerator*) * 100);
     emitter->generators = generators;

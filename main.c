@@ -33,6 +33,7 @@ int main()
 
     ParticleEmitter* emitter = ConstructParticleEmitter();
     emitter->emitRate = 10.0f;
+    emitter->duration = 3.0f;
 
     ParticleGenerator sphericalGenerator = getSphericalGenerator();
     SphericalGeneratorData* generatorData = (SphericalGeneratorData*) sphericalGenerator.generatorData;
