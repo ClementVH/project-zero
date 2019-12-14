@@ -1,24 +1,19 @@
 #ifndef FILE_EMITTER_SEEN
 #define FILE_EMITTER_SEEN
-#include <stdint.h>
 #include "particle/system.h"
 #include "particle/generator.h"
 
 typedef struct ParticleEmitter {
-    void (*emit)(ParticleData*, struct ParticleEmitter*);
-    intptr_t emitterData;
+    float emitRate;
+    float timeAccumulator;
 
     ParticleGenerator** generators;
     int countGenerators;
 } ParticleEmitter;
 
+ParticleEmitter* ConstructParticleEmitter();
+
+void emitParticle(ParticleData*, ParticleEmitter*);
+
 void addParticleGenerator(ParticleEmitter* emitter, ParticleGenerator* generator);
-
-typedef struct BasicEmitterData {
-    float emitRate;
-    float timeAccumulator;
-} BasicEmitterData;
-
-ParticleEmitter getBasicEmitter();
-
 #endif

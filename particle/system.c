@@ -32,7 +32,7 @@ ParticleSystem* ConstructParticleSystem() {
 void updateParticleSystem(ParticleSystem* system) {
 
     for (int i = 0; i < system->countEmitters; ++i) {
-        system->emitters[i]->emit(system->particles, system->emitters[i]);
+        emitParticle(system->particles, system->emitters[i]);
     }
 
     for (int i = 0; i < system->countUpdaters; ++i) {

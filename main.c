@@ -31,17 +31,16 @@ int main()
     Texture2D particleTexture = LoadTexture("assets/particle/point-light.png");
     int blending = BLEND_ALPHA;
 
-    ParticleEmitter basicEmitter = getBasicEmitter();
-    BasicEmitterData* emitterData = (BasicEmitterData*) basicEmitter.emitterData;
-    emitterData->emitRate = 10.0f;
+    ParticleEmitter* emitter = ConstructParticleEmitter();
+    emitter->emitRate = 10.0f;
 
     ParticleGenerator sphericalGenerator = getSphericalGenerator();
     SphericalGeneratorData* generatorData = (SphericalGeneratorData*) sphericalGenerator.generatorData;
     generatorData->center = (Vector3){1.0f, 1.0f, 1.0f};
     generatorData->radius = 1.0f;
-    addParticleGenerator(&basicEmitter, &sphericalGenerator);
+    addParticleGenerator(emitter, &sphericalGenerator);
 
-    addParticleEmitter(system, &basicEmitter);
+    addParticleEmitter(system, emitter);
     addParticleUpdater(system, &basicUpdater);
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second

@@ -6,16 +6,15 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-void _basicEmitter(ParticleData* particles, ParticleEmitter* emitter) {
-    BasicEmitterData* data = (BasicEmitterData*) emitter->emitterData;
+void emitParticle(ParticleData* particles, ParticleEmitter* emitter) {
     int startId = particles->countAlive;
 
-    float deltaTimeAccumulated = GetFrameTime() + data->timeAccumulator;
+    float deltaTimeAccumulated = GetFrameTime() + emitter->timeAccumulator;
 
-    if (deltaTimeAccumulated > 1.0f / data->emitRate) {
-        data->timeAccumulator = 0.0f;
+    if (deltaTimeAccumulated > 1.0f / emitter->emitRate) {
+        emitter->timeAccumulator = 0.0f;
 
-        int endId = Clamp(startId + deltaTimeAccumulated * data->emitRate, startId, MAX_PARTICLE_COUNT);
+        int endId = Clamp(startId + deltaTimeAccumulated * emitter->emitRate, startId, MAX_PARTICLE_COUNT);
 
 
         for (int i = 0; i < emitter->countGenerators; i++) {
@@ -29,17 +28,21 @@ void _basicEmitter(ParticleData* particles, ParticleEmitter* emitter) {
         }
 
     } else {
-        data->timeAccumulator = deltaTimeAccumulated;
+        emitter->timeAccumulator = deltaTimeAccumulated;
     }
 }
 
-ParticleEmitter getBasicEmitter() {
-    BasicEmitterData* data = malloc(sizeof(BasicEmitterData));
-    data->emitRate = 1.0f;
-    data->timeAccumulator = 0.0f;
+ParticleEmitter* ConstructParticleEmitter() {
+    ParticleEmitter* emitter = (ParticleEmitter*) malloc(sizeof(ParticleEmitter));
+
+    emitter->emitRate = 1.0f;
+    emitter->timeAccumulator = 0.0f;
+
     ParticleGenerator** generators = (ParticleGenerator**) malloc(sizeof(ParticleGenerator*) * 100);
-    ParticleEmitter basicEmitter = { &_basicEmitter, (intptr_t)(data), generators, 0 };
-    return basicEmitter;
+    emitter->generators = generators;
+    emitter->countGenerators = 0;
+
+    return emitter;
 }
 
 void addParticleGenerator(ParticleEmitter* emitter, ParticleGenerator* generator) {
