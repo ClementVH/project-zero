@@ -5,8 +5,7 @@
 #include "particle/particle.h"
 #include "particle/generator.h"
 
-void sphericalGenerator(ParticleData* particles, int startId, int endId, intptr_t pgenerator) {
-    ParticleGenerator* generator = (ParticleGenerator*) pgenerator;
+void sphericalGenerator(ParticleData* particles, int startId, int endId, ParticleGenerator* generator) {
     SphericalGeneratorData* data = (SphericalGeneratorData*) generator->generatorData;
 
     for (int i = startId; i < endId; i++) {

@@ -6,8 +6,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-void _basicEmitter(ParticleData* particles, intptr_t pemitter) {
-    ParticleEmitter* emitter = (ParticleEmitter*) pemitter;
+void _basicEmitter(ParticleData* particles, ParticleEmitter* emitter) {
     BasicEmitterData* data = (BasicEmitterData*) emitter->emitterData;
     int startId = particles->countAlive;
 
@@ -20,7 +19,7 @@ void _basicEmitter(ParticleData* particles, intptr_t pemitter) {
 
 
         for (int i = 0; i < emitter->countGenerators; i++) {
-            emitter->generators[i]->generate(particles, startId, endId, (intptr_t)emitter->generators[i]);
+            emitter->generators[i]->generate(particles, startId, endId, emitter->generators[i]);
         }
 
         for (int i = startId; i < endId; i++) {

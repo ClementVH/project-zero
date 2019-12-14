@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdint.h>
 #include "particle/particle.h"
 #include "particle/system.h"
 #include "particle/updater.h"
@@ -33,7 +32,7 @@ ParticleSystem* ConstructParticleSystem() {
 void updateParticleSystem(ParticleSystem* system) {
 
     for (int i = 0; i < system->countEmitters; ++i) {
-        system->emitters[i]->emit(system->particles, (intptr_t) system->emitters[i]);
+        system->emitters[i]->emit(system->particles, system->emitters[i]);
     }
 
     for (int i = 0; i < system->countUpdaters; ++i) {

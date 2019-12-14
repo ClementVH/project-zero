@@ -5,7 +5,7 @@
 #include "particle/particle.h"
 
 typedef struct ParticleGenerator {
-    void (*generate)(ParticleData*, int, int, intptr_t);
+    void (*generate)(ParticleData*, int, int, struct ParticleGenerator*);
     intptr_t generatorData;
 } ParticleGenerator;
 
