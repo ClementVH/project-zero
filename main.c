@@ -33,10 +33,10 @@ int main()
 
     ParticleEmitter* emitter = ConstructParticleEmitter();
     emitter->emitRate = 10.0f;
-    emitter->duration = 3.0f;
-    emitter->delay = 2.0f;
+    emitter->duration = 0.0f;
+    emitter->delay = 0.0f;
 
-    emitter->burst = true;
+    emitter->burst = false;
     emitter->burstMin = 100;
 
     ParticleGenerator sphericalGenerator = getSphericalGenerator();
@@ -53,6 +53,9 @@ int main()
 
     ParticleGenerator speedGenerator = getSpeedGenerator(0.09f, 0.16f);
     addParticleGenerator(emitter, &speedGenerator);
+
+    ParticleGenerator sizeGenerator = getSizeGenerator(0.4f, 0.8f);
+    addParticleGenerator(emitter, &sizeGenerator);
 
     addParticleEmitter(system, emitter);
 

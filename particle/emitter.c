@@ -15,7 +15,6 @@ void emit(ParticleData* particleData, ParticleEmitter* emitter, int startId, int
     for (int i = startId; i < endId; i++) {
         particleData->countAlive++;
         particleData->particles[i].alive = true;
-        particleData->particles[i].size = 0.8f;
     }
 }
 

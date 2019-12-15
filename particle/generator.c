@@ -70,3 +70,22 @@ ParticleGenerator getSpeedGenerator(float minSpeed, float maxSpeed) {
     ParticleGenerator generator = {&speedGenerator, (intptr_t)data};
     return generator;
 }
+
+void sizeGenerator(ParticleData* particleData, int startId, int endId, ParticleGenerator* generator) {
+    SizeGeneratorData* data = (SizeGeneratorData*) generator->generatorData;
+
+    float interval = data->maxSize - data->minSize;
+
+    for (int i = startId; i < endId; i++) {
+        float size = ((float)rand()/(float)(RAND_MAX)) * interval + data->minSize;
+        particleData->particles[i].size = size;
+    }
+}
+
+ParticleGenerator getSizeGenerator(float minSize, float maxSize) {
+    SizeGeneratorData* data = malloc(sizeof(SizeGeneratorData));
+    data->minSize = minSize;
+    data->maxSize = maxSize;
+    ParticleGenerator generator = {&sizeGenerator, (intptr_t)data};
+    return generator;
+}

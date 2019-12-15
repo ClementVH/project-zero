@@ -30,4 +30,11 @@ typedef struct SpeedGeneratorData {
     float maxSpeed;
 } SpeedGeneratorData;
 
+ParticleGenerator getSizeGenerator(float, float);
+
+typedef struct SizeGeneratorData {
+    float minSize;
+    float maxSize;
+} SizeGeneratorData;
+
 #endif
