@@ -47,7 +47,8 @@ int main()
 
     ParticleGenerator lifeTimeGenerator = getLifeTimeGenerator();
     LifeTimeGeneratorData* lifeTimeGeneratorData = (LifeTimeGeneratorData*) lifeTimeGenerator.generatorData;
-    lifeTimeGeneratorData->time = 1.0f;
+    lifeTimeGeneratorData->minTime = 0.2f;
+    lifeTimeGeneratorData->maxTime = 0.6f;
     addParticleGenerator(emitter, &lifeTimeGenerator);
 
     addParticleEmitter(system, emitter);

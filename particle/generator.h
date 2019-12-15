@@ -19,7 +19,8 @@ typedef struct SphericalGeneratorData {
 ParticleGenerator getLifeTimeGenerator();
 
 typedef struct LifeTimeGeneratorData {
-    float time;
+    float minTime;
+    float maxTime;
 } LifeTimeGeneratorData;
 
 #endif

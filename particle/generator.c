@@ -38,8 +38,11 @@ ParticleGenerator getSphericalGenerator() {
 void lifeTimeGenerator(ParticleData* particleData, int startId, int endId, ParticleGenerator* generator) {
     LifeTimeGeneratorData* data = (LifeTimeGeneratorData*) generator->generatorData;
 
+    float interval = data->maxTime - data->minTime;
+
     for (int i = startId; i < endId; i++) {
-        particleData->particles[i].lifeTime = data->time;
+        float time = ((float)rand()/(float)(RAND_MAX)) * interval + data->minTime;
+        particleData->particles[i].lifeTime = time;
     }
 }
 
