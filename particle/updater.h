@@ -8,5 +8,6 @@ typedef struct ParticleUpdater {
 } ParticleUpdater;
 
 ParticleUpdater basicUpdater;
+ParticleUpdater timeUpdater;
 
 #endif

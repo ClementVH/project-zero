@@ -13,11 +13,14 @@ typedef struct Particle {
     float size;
     float rotation;
     float cameraDistance;
+    float lifeTime;
 } Particle;
 
 typedef struct ParticleData {
     Particle particles[MAX_PARTICLE_COUNT];
     int countAlive;
 } ParticleData;
+
+void killParticle(ParticleData*, int);
 
 #endif

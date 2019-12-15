@@ -15,4 +15,11 @@ typedef struct SphericalGeneratorData {
     Vector3 center;
     float radius;
 } SphericalGeneratorData;
+
+ParticleGenerator getLifeTimeGenerator();
+
+typedef struct LifeTimeGeneratorData {
+    float time;
+} LifeTimeGeneratorData;
+
 #endif

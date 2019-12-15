@@ -34,3 +34,17 @@ ParticleGenerator getSphericalGenerator() {
     ParticleGenerator generator = {&sphericalGenerator, (intptr_t)data};
     return generator;
 }
+
+void lifeTimeGenerator(ParticleData* particleData, int startId, int endId, ParticleGenerator* generator) {
+    LifeTimeGeneratorData* data = (LifeTimeGeneratorData*) generator->generatorData;
+
+    for (int i = startId; i < endId; i++) {
+        particleData->particles[i].lifeTime = data->time;
+    }
+}
+
+ParticleGenerator getLifeTimeGenerator() {
+    LifeTimeGeneratorData* data = malloc(sizeof(LifeTimeGeneratorData));
+    ParticleGenerator generator = {&lifeTimeGenerator, (intptr_t)data};
+    return generator;
+}

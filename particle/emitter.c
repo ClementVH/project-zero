@@ -13,10 +13,12 @@ void emitParticle(ParticleData* particleData, ParticleEmitter* emitter) {
     emitter->totalTime += GetFrameTime();
 
     if (emitter->delay > 0.0f && emitter->totalTime < emitter->delay) {
+        emitter->timeBuffer = 0.0f;
         return;
     }
 
     if (emitter->duration > 0.0f && emitter->totalTime >= emitter->duration + emitter->delay) {
+        emitter->timeBuffer = 0.0f;
         return;
     }
 

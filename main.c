@@ -37,13 +37,19 @@ int main()
     emitter->delay = 3.0f;
 
     ParticleGenerator sphericalGenerator = getSphericalGenerator();
-    SphericalGeneratorData* generatorData = (SphericalGeneratorData*) sphericalGenerator.generatorData;
-    generatorData->center = (Vector3){1.0f, 1.0f, 1.0f};
-    generatorData->radius = 1.0f;
+    SphericalGeneratorData* sphericalGeneratorData = (SphericalGeneratorData*) sphericalGenerator.generatorData;
+    sphericalGeneratorData->center = (Vector3){1.0f, 1.0f, 1.0f};
+    sphericalGeneratorData->radius = 1.0f;
     addParticleGenerator(emitter, &sphericalGenerator);
+
+    ParticleGenerator lifeTimeGenerator = getLifeTimeGenerator();
+    LifeTimeGeneratorData* lifeTimeGeneratorData = (LifeTimeGeneratorData*) lifeTimeGenerator.generatorData;
+    lifeTimeGeneratorData->time = 1.0f;
+    addParticleGenerator(emitter, &lifeTimeGenerator);
 
     addParticleEmitter(system, emitter);
     addParticleUpdater(system, &basicUpdater);
+    addParticleUpdater(system, &timeUpdater);
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
