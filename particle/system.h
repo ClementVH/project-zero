@@ -20,4 +20,6 @@ void updateParticleSystem(ParticleSystem* system);
 void addParticleEmitter(ParticleSystem* system, ParticleEmitter* emitter);
 void addParticleUpdater(ParticleSystem* system, ParticleUpdater* updater);
 
+void sortParticles(ParticleSystem*, Camera);
+
 #endif

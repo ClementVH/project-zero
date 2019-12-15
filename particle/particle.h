@@ -12,6 +12,7 @@ typedef struct Particle {
     float alpha;
     float size;
     float rotation;
+    float cameraDistance;
 } Particle;
 
 typedef struct ParticleData {

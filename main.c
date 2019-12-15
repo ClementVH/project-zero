@@ -53,6 +53,7 @@ int main()
     {
         UpdatePlayer(player);
         updateParticleSystem(system);
+        sortParticles(system, *camera);
 
         // Draw
         //----------------------------------------------------------------------------------
