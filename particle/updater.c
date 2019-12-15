@@ -2,18 +2,19 @@
 #include "particle/updater.h"
 #include "particle/particle.h"
 
-void _basicUpdater(ParticleData* particleData) {
-
+void newtonUpdater(ParticleData* particleData) {
     for (int i = 0; i < particleData->countAlive; i++) {
         particleData->particles[i].pos =
             Vector3Add(particleData->particles[i].pos, Vector3Scale(particleData->particles[i].vel, 0.16f));
     }
-
 }
 
-ParticleUpdater basicUpdater = {&_basicUpdater};
+ParticleUpdater getNewtonUpdater() {
+    ParticleUpdater updater = {&newtonUpdater, 0};
+    return updater;
+}
 
-void _timeUpdater(ParticleData* particleData) {
+void timeUpdater(ParticleData* particleData) {
     int endId = particleData->countAlive;
     float timeElapsed = GetFrameTime();
 
@@ -30,4 +31,7 @@ void _timeUpdater(ParticleData* particleData) {
     }
 }
 
-ParticleUpdater timeUpdater = {&_timeUpdater};
+ParticleUpdater getTimeUpdater() {
+    ParticleUpdater updater = {&timeUpdater, 0};
+    return updater;
+}

@@ -52,7 +52,11 @@ int main()
     addParticleGenerator(emitter, &lifeTimeGenerator);
 
     addParticleEmitter(system, emitter);
-    addParticleUpdater(system, &basicUpdater);
+
+    ParticleUpdater newtonUpdater = getNewtonUpdater();
+    addParticleUpdater(system, &newtonUpdater);
+
+    ParticleUpdater timeUpdater = getTimeUpdater();
     addParticleUpdater(system, &timeUpdater);
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
