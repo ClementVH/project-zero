@@ -25,6 +25,7 @@ void _timeUpdater(ParticleData* particleData) {
         if (particleData->particles[i].lifeTime < 0.0f) {
             killParticle(particleData, i);
             endId = particleData->countAlive;
+            i--;
         }
     }
 }

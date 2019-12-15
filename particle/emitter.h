@@ -4,12 +4,17 @@
 #include "particle/generator.h"
 
 typedef struct ParticleEmitter {
+    bool active;
+
     float emitRate;
     float timeBuffer;
 
     float totalTime;
     float duration;
     float delay;
+
+    bool burst;
+    int burstMin;
 
     ParticleGenerator** generators;
     int countGenerators;

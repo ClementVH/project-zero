@@ -6,42 +6,61 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-void emitParticle(ParticleData* particleData, ParticleEmitter* emitter) {
-    int startId = particleData->countAlive;
+void emit(ParticleData* particleData, ParticleEmitter* emitter, int startId, int endId) {
 
-    emitter->timeBuffer += GetFrameTime();
-    emitter->totalTime += GetFrameTime();
-
-    if (emitter->delay > 0.0f && emitter->totalTime < emitter->delay) {
-        emitter->timeBuffer = 0.0f;
-        return;
+    for (int i = 0; i < emitter->countGenerators; i++) {
+        emitter->generators[i]->generate(particleData, startId, endId, emitter->generators[i]);
     }
 
+    for (int i = startId; i < endId; i++) {
+        particleData->countAlive++;
+        particleData->particles[i].alive = true;
+        particleData->particles[i].size = 0.8f;
+    }
+}
+
+void emitBurst(ParticleData* particleData, ParticleEmitter* emitter) {
+    int startId = particleData->countAlive;
+
+    int endId = Clamp(startId + emitter->burstMin, startId, MAX_PARTICLE_COUNT);
+    emit(particleData, emitter, startId, endId);
+    emitter->active = false;
+}
+
+void emitOverTime(ParticleData* particleData, ParticleEmitter* emitter) {
+    int startId = particleData->countAlive;
+
     if (emitter->duration > 0.0f && emitter->totalTime >= emitter->duration + emitter->delay) {
-        emitter->timeBuffer = 0.0f;
+        emitter->active = false;
         return;
     }
 
     if (emitter->timeBuffer > 1.0f / emitter->emitRate) {
         int endId = Clamp(startId + emitter->timeBuffer * emitter->emitRate, startId, MAX_PARTICLE_COUNT);
-
-        for (int i = 0; i < emitter->countGenerators; i++) {
-            emitter->generators[i]->generate(particleData, startId, endId, emitter->generators[i]);
-        }
-
-        for (int i = startId; i < endId; i++) {
-            particleData->countAlive++;
-            particleData->particles[i].alive = true;
-            particleData->particles[i].size = 0.8f;
-        }
-
+        emit(particleData, emitter, startId, endId);
         emitter->timeBuffer = 0.0f;
+    }
+}
 
+void emitParticle(ParticleData* particleData, ParticleEmitter* emitter) {
+    emitter->totalTime += GetFrameTime();
+
+    if (!emitter->active || (emitter->delay > 0.0f && emitter->totalTime < emitter->delay)) {
+        return;
+    }
+
+    if (emitter->burst) {
+        return emitBurst(particleData, emitter);
+    } else {
+        emitter->timeBuffer += GetFrameTime();
+        return emitOverTime(particleData, emitter);
     }
 }
 
 ParticleEmitter* ConstructParticleEmitter() {
     ParticleEmitter* emitter = (ParticleEmitter*) malloc(sizeof(ParticleEmitter));
+
+    emitter->active = true;
 
     emitter->emitRate = 1.0f;
     emitter->timeBuffer = 0.0f;
