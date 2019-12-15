@@ -51,6 +51,9 @@ int main()
     lifeTimeGeneratorData->maxTime = 0.6f;
     addParticleGenerator(emitter, &lifeTimeGenerator);
 
+    ParticleGenerator speedGenerator = getSpeedGenerator(0.09f, 0.16f);
+    addParticleGenerator(emitter, &speedGenerator);
+
     addParticleEmitter(system, emitter);
 
     ParticleUpdater newtonUpdater = getNewtonUpdater();

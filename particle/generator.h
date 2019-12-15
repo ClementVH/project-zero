@@ -23,4 +23,11 @@ typedef struct LifeTimeGeneratorData {
     float maxTime;
 } LifeTimeGeneratorData;
 
+ParticleGenerator getSpeedGenerator(float, float);
+
+typedef struct SpeedGeneratorData {
+    float minSpeed;
+    float maxSpeed;
+} SpeedGeneratorData;
+
 #endif

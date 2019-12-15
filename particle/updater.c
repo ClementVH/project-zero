@@ -4,8 +4,7 @@
 
 void newtonUpdater(ParticleData* particleData) {
     for (int i = 0; i < particleData->countAlive; i++) {
-        particleData->particles[i].pos =
-            Vector3Add(particleData->particles[i].pos, Vector3Scale(particleData->particles[i].vel, 0.16f));
+        particleData->particles[i].pos = Vector3Add(particleData->particles[i].pos, particleData->particles[i].vel);
     }
 }
 
