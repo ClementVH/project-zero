@@ -1,20 +1,10 @@
 #include "raylib.h"
 #include "rlgl.h"
+#include "particle/particle.h"
 #include "particle/renderer.h"
 
-// Draw a billboard (part of a texture defined by a rectangle)
-void DrawParticleRec(Camera camera, Texture2D texture, Rectangle sourceRec, Vector3 center, float size, Color tint)
-{
-    // NOTE: Billboard size will maintain sourceRec aspect ratio, size will represent billboard width
-    Vector2 sizeRatio = { size, size*(float)sourceRec.height/sourceRec.width };
+void draw(Rectangle sourceRec, Texture2D texture, Color tint, Vector3 center, Vector3 right, Vector3 up) {
 
-    Matrix matView = MatrixLookAt(camera.position, camera.target, camera.up);
-
-    Vector3 right = { matView.m0, matView.m4, matView.m8 };
-    Vector3 up = { matView.m1, matView.m5, matView.m9 };
-
-    // NOTE: Billboard locked on axis-Y
-    // Vector3 up = { 0.0f, 1.0f, 0.0f };
 /*
     a-------b
     |       |
@@ -22,8 +12,6 @@ void DrawParticleRec(Camera camera, Texture2D texture, Rectangle sourceRec, Vect
     |       |
     d-------c
 */
-    right = Vector3Scale(right, sizeRatio.x/2);
-    up = Vector3Scale(up, sizeRatio.y/2);
 
     Vector3 p1 = Vector3Add(right, up);
     Vector3 p2 = Vector3Subtract(right, up);
@@ -58,6 +46,24 @@ void DrawParticleRec(Camera camera, Texture2D texture, Rectangle sourceRec, Vect
     rlEnd();
 
     rlDisableTexture();
+
+}
+
+// Draw a billboard (part of a texture defined by a rectangle)
+void DrawParticleRec(Camera camera, Texture2D texture, Rectangle sourceRec, Vector3 center, float size, Color tint)
+{
+    // NOTE: Billboard size will maintain sourceRec aspect ratio, size will represent billboard width
+    Vector2 sizeRatio = { size, size*(float)sourceRec.height/sourceRec.width };
+
+    Matrix matView = MatrixLookAt(camera.position, camera.target, camera.up);
+
+    Vector3 right = { matView.m0, matView.m4, matView.m8 };
+    Vector3 up = { matView.m1, matView.m5, matView.m9 };
+
+    right = Vector3Scale(right, sizeRatio.x/2);
+    up = Vector3Scale(up, sizeRatio.y/2);
+
+    draw(sourceRec, texture, tint, center, right, up);
 }
 
 // Draw a billboard
@@ -66,4 +72,31 @@ void DrawParticle(Camera camera, Texture2D texture, Vector3 center, float size, 
     Rectangle sourceRec = { 0.0f, 0.0f, (float)texture.width, (float)texture.height };
 
     DrawParticleRec(camera, texture, sourceRec, center, size, tint);
+}
+
+// Draw a billboard (part of a texture defined by a rectangle)
+void DrawParticleStretchedRec(Camera camera, Texture2D texture, Rectangle sourceRec, Particle* particle)
+{
+    // NOTE: Billboard size will maintain sourceRec aspect ratio, size will represent billboard width
+    Vector2 sizeRatio = { particle->size, particle->size*(float)sourceRec.height/sourceRec.width };
+
+    Matrix matView = MatrixLookAt(camera.position, camera.target, camera.up);
+
+    Vector3 v1 = { matView.m2, matView.m6, matView.m10 };
+    Vector3 right = Vector3Normalize(particle->vel);
+    Vector3 up = Vector3CrossProduct(v1, right);
+    v1 = Vector3CrossProduct(right, up);
+
+    right = Vector3Scale(right, sizeRatio.x/2 * 3.0f);
+    up = Vector3Scale(up, sizeRatio.y/4);
+
+    draw(sourceRec, texture, particle->color, particle->pos, right, up);
+}
+
+// Draw a billboard
+void DrawParticleStretched(Camera camera, Texture2D texture, Particle* particle)
+{
+    Rectangle sourceRec = { 0.0f, 0.0f, (float)texture.width, (float)texture.height };
+
+    DrawParticleStretchedRec(camera, texture, sourceRec, particle);
 }

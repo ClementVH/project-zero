@@ -32,7 +32,7 @@ int main()
     int blending = BLEND_ALPHA;
 
     ParticleEmitter* emitter = ConstructParticleEmitter();
-    emitter->emitRate = 10.0f;
+    emitter->emitRate = 5.0f;
     emitter->duration = 0.0f;
     emitter->delay = 0.0f;
 
