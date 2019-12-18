@@ -37,4 +37,10 @@ typedef struct SizeGeneratorData {
     float maxSize;
 } SizeGeneratorData;
 
+ParticleGenerator getColorGenerator(Color);
+
+typedef struct ColorGeneratorData {
+    Color color;
+} ColorGeneratorData;
+
 #endif

@@ -39,6 +39,7 @@ int main()
     emitter->burst = false;
     emitter->burstMin = 100;
 
+    // Generators
     ParticleGenerator sphericalGenerator = getSphericalGenerator();
     SphericalGeneratorData* sphericalGeneratorData = (SphericalGeneratorData*) sphericalGenerator.generatorData;
     sphericalGeneratorData->center = (Vector3){1.0f, 1.0f, 1.0f};
@@ -47,23 +48,30 @@ int main()
 
     ParticleGenerator lifeTimeGenerator = getLifeTimeGenerator();
     LifeTimeGeneratorData* lifeTimeGeneratorData = (LifeTimeGeneratorData*) lifeTimeGenerator.generatorData;
-    lifeTimeGeneratorData->minTime = 0.2f;
-    lifeTimeGeneratorData->maxTime = 0.6f;
+    lifeTimeGeneratorData->minTime = 1.0f;
+    lifeTimeGeneratorData->maxTime = 1.5f;
     addParticleGenerator(emitter, &lifeTimeGenerator);
 
     ParticleGenerator speedGenerator = getSpeedGenerator(0.09f, 0.16f);
     addParticleGenerator(emitter, &speedGenerator);
 
-    ParticleGenerator sizeGenerator = getSizeGenerator(0.4f, 0.8f);
+    ParticleGenerator sizeGenerator = getSizeGenerator(1.0f, 1.5f);
     addParticleGenerator(emitter, &sizeGenerator);
+
+    ParticleGenerator colorGenerator = getColorGenerator(RED);
+    addParticleGenerator(emitter, &colorGenerator);
 
     addParticleEmitter(system, emitter);
 
+    // Updaters
     ParticleUpdater newtonUpdater = getNewtonUpdater();
     addParticleUpdater(system, &newtonUpdater);
 
     ParticleUpdater timeUpdater = getTimeUpdater();
     addParticleUpdater(system, &timeUpdater);
+
+    ParticleUpdater alphaUpdater = getAlphaUpdater();
+    addParticleUpdater(system, &alphaUpdater);
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
@@ -85,11 +93,11 @@ int main()
                 DrawGrid(50, 1.0f);
                 DrawPlayer(player);
 
-
                 BeginBlendMode(blending);
                     ParticleData* particleData = system->particleData;
                     for (int i = 0; i < particleData->countAlive; i++) {
-                        DrawParticle(*camera, particleTexture, particleData->particles[i].pos, particleData->particles[i].size, RED);
+                        Particle particle = particleData->particles[i];
+                        DrawParticle(*camera, particleTexture, particle.pos, particle.size, particle.color);
                     }
                 EndBlendMode();
             EndMode3D();

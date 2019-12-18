@@ -9,11 +9,12 @@ typedef struct Particle {
     Vector3 vel;
     Vector3 acc;
     bool alive;
-    float alpha;
     float size;
     float rotation;
     float cameraDistance;
+    float maxLifeTime;
     float lifeTime;
+    Color color;
 } Particle;
 
 typedef struct ParticleData {

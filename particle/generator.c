@@ -42,7 +42,8 @@ void lifeTimeGenerator(ParticleData* particleData, int startId, int endId, Parti
 
     for (int i = startId; i < endId; i++) {
         float time = ((float)rand()/(float)(RAND_MAX)) * interval + data->minTime;
-        particleData->particles[i].lifeTime = time;
+        particleData->particles[i].maxLifeTime = time;
+        particleData->particles[i].lifeTime = 0.0f;
     }
 }
 
@@ -87,5 +88,20 @@ ParticleGenerator getSizeGenerator(float minSize, float maxSize) {
     data->minSize = minSize;
     data->maxSize = maxSize;
     ParticleGenerator generator = {&sizeGenerator, (intptr_t)data};
+    return generator;
+}
+
+void colorGenerator(ParticleData* particleData, int startId, int endId, ParticleGenerator* generator) {
+    ColorGeneratorData* data = (ColorGeneratorData*) generator->generatorData;
+
+    for (int i = startId; i < endId; i++) {
+        particleData->particles[i].color = data->color;
+    }
+}
+
+ParticleGenerator getColorGenerator(Color color) {
+    ColorGeneratorData* data = malloc(sizeof(ColorGeneratorData));
+    data->color = color;
+    ParticleGenerator generator = {&colorGenerator, (intptr_t)data};
     return generator;
 }

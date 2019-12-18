@@ -37,7 +37,7 @@ void updateParticleSystem(ParticleSystem* system) {
     }
 
     for (int i = 0; i < system->countUpdaters; ++i) {
-        system->updaters[i]->update(system->particleData);
+        system->updaters[i]->update(system->particleData, system->updaters[i]);
     }
 
 }
@@ -71,7 +71,6 @@ void sortParticles(ParticleSystem* system, Camera camera) {
         system->particleData->particles[i].cameraDistance =
             Vector3Distance(system->particleData->particles[i].pos, camera.position);
     }
-
 
     Particle* particles = system->particleData->particles;
     qsort(particles, system->particleData->countAlive, sizeof(Particle), comp);
