@@ -43,20 +43,17 @@ int main()
     ParticleGenerator* sphericalGenerator = getSphericalGenerator(Vector3Zero(), 1.0f, false);
     addParticleGenerator(emitter, sphericalGenerator);
 
-    ParticleGenerator lifeTimeGenerator = getLifeTimeGenerator();
-    LifeTimeGeneratorData* lifeTimeGeneratorData = (LifeTimeGeneratorData*) lifeTimeGenerator.generatorData;
-    lifeTimeGeneratorData->minTime = 1.0f;
-    lifeTimeGeneratorData->maxTime = 1.5f;
-    addParticleGenerator(emitter, &lifeTimeGenerator);
+    ParticleGenerator* lifeTimeGenerator = getLifeTimeGenerator(1.0f, 1.5f);
+    addParticleGenerator(emitter, lifeTimeGenerator);
 
-    ParticleGenerator speedGenerator = getSpeedGenerator(0.09f, 0.16f);
-    addParticleGenerator(emitter, &speedGenerator);
+    ParticleGenerator* speedGenerator = getSpeedGenerator(0.09f, 0.16f);
+    addParticleGenerator(emitter, speedGenerator);
 
-    ParticleGenerator sizeGenerator = getSizeGenerator(1.0f, 1.5f);
-    addParticleGenerator(emitter, &sizeGenerator);
+    ParticleGenerator* sizeGenerator = getSizeGenerator(1.0f, 1.5f);
+    addParticleGenerator(emitter, sizeGenerator);
 
-    ParticleGenerator colorGenerator = getColorGenerator(RED);
-    addParticleGenerator(emitter, &colorGenerator);
+    ParticleGenerator* colorGenerator = getColorGenerator(RED);
+    addParticleGenerator(emitter, colorGenerator);
 
     addParticleEmitter(system, emitter);
 

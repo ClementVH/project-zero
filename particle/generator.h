@@ -17,28 +17,28 @@ typedef struct SphericalGeneratorData {
     bool fromShell;
 } SphericalGeneratorData;
 
-ParticleGenerator getLifeTimeGenerator();
+ParticleGenerator* getLifeTimeGenerator(float, float);
 
 typedef struct LifeTimeGeneratorData {
     float minTime;
     float maxTime;
 } LifeTimeGeneratorData;
 
-ParticleGenerator getSpeedGenerator(float, float);
+ParticleGenerator* getSpeedGenerator(float, float);
 
 typedef struct SpeedGeneratorData {
     float minSpeed;
     float maxSpeed;
 } SpeedGeneratorData;
 
-ParticleGenerator getSizeGenerator(float, float);
+ParticleGenerator* getSizeGenerator(float, float);
 
 typedef struct SizeGeneratorData {
     float minSize;
     float maxSize;
 } SizeGeneratorData;
 
-ParticleGenerator getColorGenerator(Color);
+ParticleGenerator* getColorGenerator(Color);
 
 typedef struct ColorGeneratorData {
     Color color;

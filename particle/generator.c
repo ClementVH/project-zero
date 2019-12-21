@@ -66,9 +66,11 @@ void lifeTimeGenerator(ParticleData* particleData, int startId, int endId, Parti
     }
 }
 
-ParticleGenerator getLifeTimeGenerator() {
+ParticleGenerator* getLifeTimeGenerator(float minTime, float maxTime) {
     LifeTimeGeneratorData* data = malloc(sizeof(LifeTimeGeneratorData));
-    ParticleGenerator generator = {&lifeTimeGenerator, (intptr_t)data};
+    data->minTime = minTime;
+    data->maxTime = maxTime;
+    ParticleGenerator* generator = ConstructGenerator(&lifeTimeGenerator, (intptr_t) data);
     return generator;
 }
 
@@ -83,11 +85,11 @@ void speedGenerator(ParticleData* particleData, int startId, int endId, Particle
     }
 }
 
-ParticleGenerator getSpeedGenerator(float minSpeed, float maxSpeed) {
+ParticleGenerator* getSpeedGenerator(float minSpeed, float maxSpeed) {
     SpeedGeneratorData* data = malloc(sizeof(SpeedGeneratorData));
     data->minSpeed = minSpeed;
     data->maxSpeed = maxSpeed;
-    ParticleGenerator generator = {&speedGenerator, (intptr_t)data};
+    ParticleGenerator* generator = ConstructGenerator(&speedGenerator, (intptr_t) data);
     return generator;
 }
 
@@ -102,11 +104,11 @@ void sizeGenerator(ParticleData* particleData, int startId, int endId, ParticleG
     }
 }
 
-ParticleGenerator getSizeGenerator(float minSize, float maxSize) {
+ParticleGenerator* getSizeGenerator(float minSize, float maxSize) {
     SizeGeneratorData* data = malloc(sizeof(SizeGeneratorData));
     data->minSize = minSize;
     data->maxSize = maxSize;
-    ParticleGenerator generator = {&sizeGenerator, (intptr_t)data};
+    ParticleGenerator* generator = ConstructGenerator(&sizeGenerator, (intptr_t) data);
     return generator;
 }
 
@@ -118,9 +120,9 @@ void colorGenerator(ParticleData* particleData, int startId, int endId, Particle
     }
 }
 
-ParticleGenerator getColorGenerator(Color color) {
+ParticleGenerator* getColorGenerator(Color color) {
     ColorGeneratorData* data = malloc(sizeof(ColorGeneratorData));
     data->color = color;
-    ParticleGenerator generator = {&colorGenerator, (intptr_t)data};
+    ParticleGenerator* generator = ConstructGenerator(&colorGenerator, (intptr_t) data);
     return generator;
 }
