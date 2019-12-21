@@ -28,7 +28,6 @@ int main()
     Camera* camera = player->camera;
     Model model = player->model;
 
-    Texture2D particleTexture = LoadTexture("assets/particle/point-light.png");
     int blending = BLEND_ALPHA;
 
     ParticleSystem* system = ConstructHitEffect(Vector3One());
@@ -54,11 +53,12 @@ int main()
                 // DrawPlayer(player);
 
                 BeginBlendMode(blending);
-                    ParticleData* particleData = system->particleData;
-                    for (int i = 0; i < particleData->countAlive; i++) {
-                        Particle particle = particleData->particles[i];
-                        DrawParticle(*camera, particleTexture, particle.pos, particle.size, particle.color);
-                    }
+                    renderParticleSystem(*camera, system);
+                    // ParticleData* particleData = system->particleData;
+                    // for (int i = 0; i < particleData->countAlive; i++) {
+                    //     Particle particle = particleData->particles[i];
+                    //     DrawParticle(*camera, particleTexture, particle.pos, particle.size, particle.color);
+                    // }
                 EndBlendMode();
             EndMode3D();
 

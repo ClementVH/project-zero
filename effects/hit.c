@@ -1,9 +1,10 @@
+#include <raymath.h>
 #include "particle/system.h"
 #include "particle/emitter.h"
 #include "particle/updater.h"
 #include "particle/generator.h"
+#include "particle/renderer.h"
 #include "effects/hit.h"
-#include "raymath.h"
 
 ParticleSystem* ConstructFlashEffect(Vector3, ParticleSystem*);
 ParticleSystem* ConstructSparksEffect(Vector3, ParticleSystem*);
@@ -50,6 +51,10 @@ ParticleSystem* ConstructFlashEffect(Vector3 center, ParticleSystem* parent) {
     ParticleUpdater* alphaUpdater = getAlphaUpdater();
     addParticleUpdater(flash, alphaUpdater);
 
+    Texture2D texture = LoadTexture("assets/particle/point-light.png");
+    ParticleRenderer* renderer = getBillboardRenderer(texture);
+    addParticleRenderer(flash, renderer);
+
     return flash;
 }
 
@@ -87,6 +92,10 @@ ParticleSystem* ConstructSparksEffect(Vector3 center, ParticleSystem* parent) {
 
     ParticleUpdater* alphaUpdater = getAlphaUpdater();
     addParticleUpdater(sparks, alphaUpdater);
+
+    Texture2D texture = LoadTexture("assets/particle/point-light.png");
+    ParticleRenderer* renderer = getStretchedBillboardRenderer(texture);
+    addParticleRenderer(sparks, renderer);
 
     return sparks;
 }

@@ -4,6 +4,7 @@
 #include "particle/particle.h"
 #include "utils/binary-search.h"
 #include "utils/bezier.h"
+#include "particle/macros.h"
 
 #define forParticlesInSystem(endId, particleData, systemID) for(int i = 0; i < endId; i++) {\
     if (particleData->particles[i].systemID != systemID)\

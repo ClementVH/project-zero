@@ -1,7 +1,9 @@
-#include "raylib.h"
-#include "rlgl.h"
+#include <stdlib.h>
+#include <raylib.h>
+#include <rlgl.h>
 #include "particle/particle.h"
 #include "particle/renderer.h"
+#include "particle/macros.h"
 
 void draw(Rectangle sourceRec, Texture2D texture, Color tint, Vector3 center, Vector3 right, Vector3 up) {
 
@@ -50,10 +52,10 @@ void draw(Rectangle sourceRec, Texture2D texture, Color tint, Vector3 center, Ve
 }
 
 // Draw a billboard (part of a texture defined by a rectangle)
-void DrawParticleRec(Camera camera, Texture2D texture, Rectangle sourceRec, Vector3 center, float size, Color tint)
+void DrawParticleRec(Camera camera, Texture2D texture, Rectangle sourceRec, Particle* particle)
 {
     // NOTE: Billboard size will maintain sourceRec aspect ratio, size will represent billboard width
-    Vector2 sizeRatio = { size, size*(float)sourceRec.height/sourceRec.width };
+    Vector2 sizeRatio = { particle->size, particle->size*(float)sourceRec.height/sourceRec.width };
 
     Matrix matView = MatrixLookAt(camera.position, camera.target, camera.up);
 
@@ -63,15 +65,20 @@ void DrawParticleRec(Camera camera, Texture2D texture, Rectangle sourceRec, Vect
     right = Vector3Scale(right, sizeRatio.x/2);
     up = Vector3Scale(up, sizeRatio.y/2);
 
-    draw(sourceRec, texture, tint, center, right, up);
+    draw(sourceRec, texture, particle->color, particle->pos, right, up);
 }
 
 // Draw a billboard
-void DrawParticle(Camera camera, Texture2D texture, Vector3 center, float size, Color tint)
+void DrawParticle(Camera camera, ParticleData* particleData, ParticleRenderer* renderer)
 {
+    Texture2D texture = renderer->texture;
     Rectangle sourceRec = { 0.0f, 0.0f, (float)texture.width, (float)texture.height };
 
-    DrawParticleRec(camera, texture, sourceRec, center, size, tint);
+    int systemID = renderer->systemID;
+    forParticlesInSystem(particleData->countAlive, particleData, systemID)
+        Particle particle = particleData->particles[i];
+        DrawParticleRec(camera, texture, sourceRec, &particle);
+    }
 }
 
 // Draw a billboard (part of a texture defined by a rectangle)
@@ -94,9 +101,28 @@ void DrawParticleStretchedRec(Camera camera, Texture2D texture, Rectangle source
 }
 
 // Draw a billboard
-void DrawParticleStretched(Camera camera, Texture2D texture, Particle* particle)
+void DrawParticleStretched(Camera camera, ParticleData* particleData, ParticleRenderer* renderer)
 {
+    Texture2D texture = renderer->texture;
     Rectangle sourceRec = { 0.0f, 0.0f, (float)texture.width, (float)texture.height };
 
-    DrawParticleStretchedRec(camera, texture, sourceRec, particle);
+    int systemID = renderer->systemID;
+    forParticlesInSystem(particleData->countAlive, particleData, systemID)
+        Particle particle = particleData->particles[i];
+        DrawParticleStretchedRec(camera, texture, sourceRec, &particle);
+    }
+}
+
+ParticleRenderer* getBillboardRenderer(Texture2D texture) {
+    ParticleRenderer* renderer = malloc(sizeof(ParticleRenderer));
+    renderer->render = &DrawParticle;
+    renderer->texture = texture;
+    return renderer;
+}
+
+ParticleRenderer* getStretchedBillboardRenderer(Texture2D texture) {
+    ParticleRenderer* renderer = malloc(sizeof(ParticleRenderer));
+    renderer->render = &DrawParticleStretched;
+    renderer->texture = texture;
+    return renderer;
 }
