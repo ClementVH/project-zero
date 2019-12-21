@@ -7,11 +7,13 @@
 
 ParticleSystem* ConstructParticleSystem() {
     ParticleSystem* system = (ParticleSystem*) malloc(sizeof(ParticleSystem));
+    system->systemID = 0;
 
     ParticleData* particleData = (ParticleData*) malloc(sizeof(ParticleData));
 
     for (int i = 0; i < MAX_PARTICLE_COUNT; ++i) {
         particleData->particles[i].alive = false;
+        particleData->particles[i].systemID = 0;
     }
 
     system->particleData = particleData;
@@ -27,6 +29,11 @@ ParticleSystem* ConstructParticleSystem() {
     system->updaters = updaters;
     system->countUpdaters = 0;
 
+    ParticleSystem** systems = (ParticleSystem**) malloc(sizeof(ParticleSystem*) * 100);
+
+    system->systems = systems;
+    system->countSystems = 0;
+
     return system;
 }
 
@@ -40,20 +47,34 @@ void updateParticleSystem(ParticleSystem* system) {
         system->updaters[i]->update(system->particleData, system->updaters[i]);
     }
 
+    for (int i = 0; i < system->countSystems; ++i) {
+        updateParticleSystem(system->systems[i]);
+    }
+
 }
 
 void addParticleEmitter(ParticleSystem* system, ParticleEmitter* emitter) {
-
+    emitter->systemID = system->systemID;
     system->emitters[system->countEmitters] = emitter;
 
     system->countEmitters = system->countEmitters + 1;
 }
 
 void addParticleUpdater(ParticleSystem* system, ParticleUpdater* updater) {
-
+    updater->systemID = system->systemID;
     system->updaters[system->countUpdaters] = updater;
 
     system->countUpdaters = system->countUpdaters + 1;
+}
+
+void addParticleSystem(ParticleSystem* system, ParticleSystem* systemToAdd) {
+    system->systems[system->countSystems] = systemToAdd;
+
+    system->countSystems = system->countSystems + 1;
+
+    free(systemToAdd->particleData);
+    systemToAdd->particleData =system->particleData;
+    systemToAdd->systemID = system->countSystems;
 }
 
 int comp (const void * elem1, const void * elem2)

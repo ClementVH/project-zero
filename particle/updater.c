@@ -5,6 +5,12 @@
 #include "utils/binary-search.h"
 #include "utils/bezier.h"
 
+#define forParticlesInSystem(endId, particleData, systemID) for(int i = 0; i < endId; i++) {\
+    if (particleData->particles[i].systemID != systemID)\
+        continue;\
+
+#define endForParticlesInSystem }
+
 ParticleUpdater* ConstructUpdater(void* update, intptr_t data) {
     ParticleUpdater* updater = malloc(sizeof(ParticleUpdater));
     updater->update = update;
@@ -14,7 +20,8 @@ ParticleUpdater* ConstructUpdater(void* update, intptr_t data) {
 }
 
 void newtonUpdater(ParticleData* particleData, ParticleUpdater* updater) {
-    for (int i = 0; i < particleData->countAlive; i++) {
+    int systemID = updater->systemID;
+    forParticlesInSystem(particleData->countAlive, particleData, systemID)
         particleData->particles[i].pos = Vector3Add(particleData->particles[i].pos, particleData->particles[i].vel);
     }
 }
@@ -30,7 +37,8 @@ void timeUpdater(ParticleData* particleData, ParticleUpdater* updater) {
 
     if (endId == 0) return;
 
-    for (int i = 0; i < endId; i++) {
+    int systemID = updater->systemID;
+    forParticlesInSystem(particleData->countAlive, particleData, systemID)
         particleData->particles[i].lifeTime += timeElapsed;
 
         if (particleData->particles[i].lifeTime > particleData->particles[i].maxLifeTime) {
@@ -53,7 +61,8 @@ void alphaUpdater(ParticleData* particleData, ParticleUpdater* updater) {
 
     if (endId == 0) return;
 
-    for (int i = 0; i < endId; i++) {
+    int systemID = updater->systemID;
+    forParticlesInSystem(particleData->countAlive, particleData, systemID)
         float x = particleData->particles[i].lifeTime / particleData->particles[i].maxLifeTime;
         int closestIndex = findClosest(data->curveX, 1000, x);
 

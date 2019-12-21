@@ -5,6 +5,7 @@
 #define MAX_PARTICLE_COUNT 10000
 
 typedef struct Particle {
+    int systemID;
     Vector3 pos;
     Vector3 vel;
     Vector3 acc;

@@ -4,6 +4,7 @@
 #include "particle/generator.h"
 
 typedef struct ParticleEmitter {
+    int systemID;
     bool active;
 
     float emitRate;

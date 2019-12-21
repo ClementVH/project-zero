@@ -15,6 +15,7 @@ void emit(ParticleData* particleData, ParticleEmitter* emitter, int startId, int
     for (int i = startId; i < endId; i++) {
         particleData->countAlive++;
         particleData->particles[i].alive = true;
+        particleData->particles[i].systemID = emitter->systemID;
     }
 }
 
@@ -59,6 +60,7 @@ void emitParticle(ParticleData* particleData, ParticleEmitter* emitter) {
 ParticleEmitter* ConstructParticleEmitter() {
     ParticleEmitter* emitter = (ParticleEmitter*) malloc(sizeof(ParticleEmitter));
 
+    emitter->systemID = 0;
     emitter->active = true;
 
     emitter->emitRate = 1.0f;

@@ -6,11 +6,18 @@
 #include "particle/updater.h"
 
 typedef struct ParticleSystem {
+    int systemID;
+
     ParticleData* particleData;
+
     ParticleEmitter** emitters;
     int countEmitters;
+
     ParticleUpdater** updaters;
     int countUpdaters;
+
+    struct ParticleSystem** systems;
+    int countSystems;
 } ParticleSystem;
 
 ParticleSystem* ConstructParticleSystem();
@@ -19,6 +26,7 @@ void updateParticleSystem(ParticleSystem* system);
 
 void addParticleEmitter(ParticleSystem* system, ParticleEmitter* emitter);
 void addParticleUpdater(ParticleSystem* system, ParticleUpdater* updater);
+void addParticleSystem(ParticleSystem* system, ParticleSystem* systemToAdd);
 
 void sortParticles(ParticleSystem*, Camera);
 

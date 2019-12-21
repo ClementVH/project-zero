@@ -6,6 +6,7 @@
 typedef struct ParticleUpdater {
     void (*update)(ParticleData*, struct ParticleUpdater*);
     intptr_t updaterData;
+    int systemID;
 } ParticleUpdater;
 
 ParticleUpdater* getNewtonUpdater();
