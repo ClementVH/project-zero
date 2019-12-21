@@ -2,12 +2,13 @@
 #include <stdio.h>
 #include <time.h>
 #include "raylib.h"
-#include "./player/player.h"
-#include "./particle/system.h"
-#include "./particle/renderer.h"
-#include "./particle/emitter.h"
-#include "./particle/updater.h"
-#include "./particle/generator.h"
+#include "player/player.h"
+#include "particle/system.h"
+#include "particle/renderer.h"
+#include "particle/emitter.h"
+#include "particle/updater.h"
+#include "particle/generator.h"
+#include "effects/hit.h"
 
 int main()
 {
@@ -27,45 +28,10 @@ int main()
     Camera* camera = player->camera;
     Model model = player->model;
 
-    ParticleSystem* system = ConstructParticleSystem();
     Texture2D particleTexture = LoadTexture("assets/particle/point-light.png");
     int blending = BLEND_ALPHA;
 
-    ParticleEmitter* emitter = ConstructParticleEmitter();
-    emitter->emitRate = 20.0f;
-    emitter->duration = 0.0f;
-    emitter->delay = 0.0f;
-
-    emitter->burst = false;
-    emitter->burstMin = 100;
-
-    // Generators
-    ParticleGenerator* sphericalGenerator = getSphericalGenerator(Vector3Zero(), 1.0f, false);
-    addParticleGenerator(emitter, sphericalGenerator);
-
-    ParticleGenerator* lifeTimeGenerator = getLifeTimeGenerator(1.0f, 1.5f);
-    addParticleGenerator(emitter, lifeTimeGenerator);
-
-    ParticleGenerator* speedGenerator = getSpeedGenerator(0.09f, 0.16f);
-    addParticleGenerator(emitter, speedGenerator);
-
-    ParticleGenerator* sizeGenerator = getSizeGenerator(1.0f, 1.5f);
-    addParticleGenerator(emitter, sizeGenerator);
-
-    ParticleGenerator* colorGenerator = getColorGenerator(RED);
-    addParticleGenerator(emitter, colorGenerator);
-
-    addParticleEmitter(system, emitter);
-
-    // Updaters
-    ParticleUpdater* newtonUpdater = getNewtonUpdater();
-    addParticleUpdater(system, newtonUpdater);
-
-    ParticleUpdater* timeUpdater = getTimeUpdater();
-    addParticleUpdater(system, timeUpdater);
-
-    ParticleUpdater* alphaUpdater = getAlphaUpdater();
-    addParticleUpdater(system, alphaUpdater);
+    ParticleSystem* system = ConstructHitEffect(Vector3One());
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------

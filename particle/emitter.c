@@ -67,6 +67,8 @@ ParticleEmitter* ConstructParticleEmitter() {
     emitter->totalTime = 0.0f;
     emitter->duration = 0.0f;
 
+    emitter->delay = 0.0f;
+
     ParticleGenerator** generators = (ParticleGenerator**) malloc(sizeof(ParticleGenerator*) * 100);
     emitter->generators = generators;
     emitter->countGenerators = 0;
