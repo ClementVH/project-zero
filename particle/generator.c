@@ -5,6 +5,14 @@
 #include "particle/particle.h"
 #include "particle/generator.h"
 
+ParticleGenerator* ConstructGenerator(void* generate, intptr_t data) {
+    ParticleGenerator* generator = malloc(sizeof(ParticleGenerator));
+    generator->generate = generate;
+    generator->generatorData = data;
+
+    return generator;
+}
+
 void sphericalGenerator(ParticleData* particleData, int startId, int endId, ParticleGenerator* generator) {
     SphericalGeneratorData* data = (SphericalGeneratorData*) generator->generatorData;
 
@@ -37,10 +45,12 @@ void sphericalGenerator(ParticleData* particleData, int startId, int endId, Part
     }
 }
 
-ParticleGenerator getSphericalGenerator() {
+ParticleGenerator* getSphericalGenerator(Vector3 center, float radius, bool fromShell) {
     SphericalGeneratorData* data = malloc(sizeof(SphericalGeneratorData));
-    data->fromShell = false;
-    ParticleGenerator generator = {&sphericalGenerator, (intptr_t)data};
+    data->center = center;
+    data->radius = radius;
+    data->fromShell = fromShell;
+    ParticleGenerator* generator = ConstructGenerator(&sphericalGenerator, (intptr_t) data);
     return generator;
 }
 

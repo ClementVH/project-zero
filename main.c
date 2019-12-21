@@ -32,7 +32,7 @@ int main()
     int blending = BLEND_ALPHA;
 
     ParticleEmitter* emitter = ConstructParticleEmitter();
-    emitter->emitRate = 5.0f;
+    emitter->emitRate = 20.0f;
     emitter->duration = 0.0f;
     emitter->delay = 0.0f;
 
@@ -40,12 +40,8 @@ int main()
     emitter->burstMin = 100;
 
     // Generators
-    ParticleGenerator sphericalGenerator = getSphericalGenerator();
-    SphericalGeneratorData* sphericalGeneratorData = (SphericalGeneratorData*) sphericalGenerator.generatorData;
-    sphericalGeneratorData->center = (Vector3){1.0f, 1.0f, 1.0f};
-    sphericalGeneratorData->radius = 5.0f;
-    sphericalGeneratorData->fromShell = false;
-    addParticleGenerator(emitter, &sphericalGenerator);
+    ParticleGenerator* sphericalGenerator = getSphericalGenerator(Vector3Zero(), 1.0f, false);
+    addParticleGenerator(emitter, sphericalGenerator);
 
     ParticleGenerator lifeTimeGenerator = getLifeTimeGenerator();
     LifeTimeGeneratorData* lifeTimeGeneratorData = (LifeTimeGeneratorData*) lifeTimeGenerator.generatorData;
@@ -88,11 +84,11 @@ int main()
         //----------------------------------------------------------------------------------
         BeginDrawing();
 
-            ClearBackground(RAYWHITE);
+            ClearBackground(BLACK);
 
             BeginMode3D(*camera);
-                DrawGrid(50, 1.0f);
-                DrawPlayer(player);
+                // DrawGrid(50, 1.0f);
+                // DrawPlayer(player);
 
                 BeginBlendMode(blending);
                     ParticleData* particleData = system->particleData;

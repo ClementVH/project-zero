@@ -9,7 +9,7 @@ typedef struct ParticleGenerator {
     intptr_t generatorData;
 } ParticleGenerator;
 
-ParticleGenerator getSphericalGenerator();
+ParticleGenerator* getSphericalGenerator(Vector3 center, float radius, bool fromShell);
 
 typedef struct SphericalGeneratorData {
     Vector3 center;
