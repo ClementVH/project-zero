@@ -14,6 +14,7 @@ ParticleGenerator getSphericalGenerator();
 typedef struct SphericalGeneratorData {
     Vector3 center;
     float radius;
+    bool fromShell;
 } SphericalGeneratorData;
 
 ParticleGenerator getLifeTimeGenerator();

@@ -20,17 +20,26 @@ void sphericalGenerator(ParticleData* particleData, int startId, int endId, Part
             data->radius * cosf(phi)
         };
 
-        particleData->particles[i].pos = (Vector3) {
-            point.x + data->center.x,
-            point.y + data->center.y,
-            point.z + data->center.z
-        };
+        Vector3 pos = (Vector3) {0.0f};
+
+        if (data->fromShell) {
+            pos.x = point.x + data->center.x;
+            pos.y = point.y + data->center.y;
+            pos.z = point.z + data->center.z;
+        } else {
+            pos.x = data->center.x;
+            pos.y = data->center.y;
+            pos.z = data->center.z;
+        }
+
+        particleData->particles[i].pos = pos;
         particleData->particles[i].vel = Vector3Normalize(point);
     }
 }
 
 ParticleGenerator getSphericalGenerator() {
     SphericalGeneratorData* data = malloc(sizeof(SphericalGeneratorData));
+    data->fromShell = false;
     ParticleGenerator generator = {&sphericalGenerator, (intptr_t)data};
     return generator;
 }

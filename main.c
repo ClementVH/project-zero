@@ -43,7 +43,8 @@ int main()
     ParticleGenerator sphericalGenerator = getSphericalGenerator();
     SphericalGeneratorData* sphericalGeneratorData = (SphericalGeneratorData*) sphericalGenerator.generatorData;
     sphericalGeneratorData->center = (Vector3){1.0f, 1.0f, 1.0f};
-    sphericalGeneratorData->radius = 1.0f;
+    sphericalGeneratorData->radius = 5.0f;
+    sphericalGeneratorData->fromShell = false;
     addParticleGenerator(emitter, &sphericalGenerator);
 
     ParticleGenerator lifeTimeGenerator = getLifeTimeGenerator();
