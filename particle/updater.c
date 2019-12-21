@@ -5,14 +5,22 @@
 #include "utils/binary-search.h"
 #include "utils/bezier.h"
 
+ParticleUpdater* ConstructUpdater(void* update, intptr_t data) {
+    ParticleUpdater* updater = malloc(sizeof(ParticleUpdater));
+    updater->update = update;
+    updater->updaterData = data;
+
+    return updater;
+}
+
 void newtonUpdater(ParticleData* particleData, ParticleUpdater* updater) {
     for (int i = 0; i < particleData->countAlive; i++) {
         particleData->particles[i].pos = Vector3Add(particleData->particles[i].pos, particleData->particles[i].vel);
     }
 }
 
-ParticleUpdater getNewtonUpdater() {
-    ParticleUpdater updater = {&newtonUpdater, 0};
+ParticleUpdater* getNewtonUpdater() {
+    ParticleUpdater* updater = ConstructUpdater(&newtonUpdater, 0);
     return updater;
 }
 
@@ -33,8 +41,8 @@ void timeUpdater(ParticleData* particleData, ParticleUpdater* updater) {
     }
 }
 
-ParticleUpdater getTimeUpdater() {
-    ParticleUpdater updater = {&timeUpdater, 0};
+ParticleUpdater* getTimeUpdater() {
+    ParticleUpdater* updater = ConstructUpdater(&timeUpdater, 0);
     return updater;
 }
 
@@ -53,7 +61,7 @@ void alphaUpdater(ParticleData* particleData, ParticleUpdater* updater) {
     }
 }
 
-ParticleUpdater getAlphaUpdater() {
+ParticleUpdater* getAlphaUpdater() {
     AlphaUpdaterData* data = malloc(sizeof(AlphaUpdaterData));
 
     Vector2* controlPoints = malloc(sizeof(Vector2) * 4);
@@ -68,6 +76,6 @@ ParticleUpdater getAlphaUpdater() {
     data->curveX = curve.curveX;
     data->curveY = curve.curveY;
 
-    ParticleUpdater updater = {&alphaUpdater, data};
+    ParticleUpdater* updater = ConstructUpdater(&alphaUpdater, (intptr_t) data);
     return updater;
 }

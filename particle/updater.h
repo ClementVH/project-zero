@@ -5,17 +5,17 @@
 
 typedef struct ParticleUpdater {
     void (*update)(ParticleData*, struct ParticleUpdater*);
-    void* updaterData;
+    intptr_t updaterData;
 } ParticleUpdater;
 
-ParticleUpdater getNewtonUpdater();
-ParticleUpdater getTimeUpdater();
+ParticleUpdater* getNewtonUpdater();
+ParticleUpdater* getTimeUpdater();
 
 typedef struct AlphaUpdaterData {
     float* curveX;
     float* curveY;
 } AlphaUpdaterData;
 
-ParticleUpdater getAlphaUpdater();
+ParticleUpdater* getAlphaUpdater();
 
 #endif
