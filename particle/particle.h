@@ -18,6 +18,7 @@ typedef struct Particle {
     float cameraDistance;
     float maxLifeTime;
     float lifeTime;
+    Color _color;
     Color color;
 } Particle;
 

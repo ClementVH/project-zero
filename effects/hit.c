@@ -32,7 +32,7 @@ ParticleSystem* ConstructFlashEffect(Vector3 center, ParticleSystem* parent) {
     emitter->burstMin = 1;
 
     // Generators
-    ParticleGenerator* sphericalGenerator = getSphericalGenerator(Vector3Zero(), 1.0f, false);
+    ParticleGenerator* sphericalGenerator = getSphericalGenerator(center, 1.0f, false);
     addParticleGenerator(emitter, sphericalGenerator);
 
     ParticleGenerator* lifeTimeGenerator = getLifeTimeGenerator(0.3f, 0.3f);
@@ -50,12 +50,9 @@ ParticleSystem* ConstructFlashEffect(Vector3 center, ParticleSystem* parent) {
     ParticleUpdater* timeUpdater = getTimeUpdater();
     addParticleUpdater(flash, timeUpdater);
 
-    Vector2* controlPoints = malloc(sizeof(Vector2) * 4);
-    controlPoints[0] = (Vector2){0.0f, 0.0f};
-    controlPoints[1] = (Vector2){0.0f, 1.0f};
-    controlPoints[2] = (Vector2){0.0f, 1.5f};
-    controlPoints[3] = (Vector2){1.0f, 0.1f};
-    ParticleUpdater* alphaUpdater = getAlphaUpdater(controlPoints, 4);
+    float cpxsAlpha[5] = { 0.00f, 0.30f, 0.58f, 0.70f, 1.00f };
+    float cpysAlpha[5] = { 0.72f, 0.96f, 0.95f, 0.84f, 0.00f };
+    ParticleUpdater* alphaUpdater = getAlphaUpdater(cpxsAlpha, cpysAlpha, 4);
     addParticleUpdater(flash, alphaUpdater);
 
     Texture2D texture = LoadTexture("assets/particle/point-light.png");
@@ -78,7 +75,7 @@ ParticleSystem* ConstructSparksEffect(Vector3 center, ParticleSystem* parent) {
     ParticleGenerator* sphericalGenerator = getSphericalGenerator(center, 1.0f, false);
     addParticleGenerator(emitter, sphericalGenerator);
 
-    ParticleGenerator* lifeTimeGenerator = getLifeTimeGenerator(0.3f, 0.6f);
+    ParticleGenerator* lifeTimeGenerator = getLifeTimeGenerator(0.2f, 0.5f);
     addParticleGenerator(emitter, lifeTimeGenerator);
 
     ParticleGenerator* sizeGenerator = getSizeGenerator(1.0f, 1.0f);
@@ -87,7 +84,7 @@ ParticleSystem* ConstructSparksEffect(Vector3 center, ParticleSystem* parent) {
     ParticleGenerator* colorGenerator = getColorGenerator(BLUE);
     addParticleGenerator(emitter, colorGenerator);
 
-    ParticleGenerator* speedGenerator = getSpeedGenerator(0.16f, 0.32f);
+    ParticleGenerator* speedGenerator = getSpeedGenerator(0.16f, 0.25f);
     addParticleGenerator(emitter, speedGenerator);
 
     ParticleUpdater* newtonUpdater = getNewtonUpdater();
@@ -96,12 +93,10 @@ ParticleSystem* ConstructSparksEffect(Vector3 center, ParticleSystem* parent) {
     ParticleUpdater* timeUpdater = getTimeUpdater();
     addParticleUpdater(sparks, timeUpdater);
 
-    Vector2* controlPoints = malloc(sizeof(Vector2) * 4);
-    controlPoints[0] = (Vector2){0.0f, 0.0f};
-    controlPoints[1] = (Vector2){0.0f, 1.0f};
-    controlPoints[2] = (Vector2){0.0f, 1.5f};
-    controlPoints[3] = (Vector2){1.0f, 0.1f};
-    ParticleUpdater* alphaUpdater = getAlphaUpdater(controlPoints, 4);
+
+    float cpxsAlpha[4] = { 0.00f, 0.88f, 0.93f, 1.00f };
+    float cpysAlpha[4] = { 1.00f, 0.93f, 0.84f, 0.00f };
+    ParticleUpdater* alphaUpdater = getAlphaUpdater(cpxsAlpha, cpysAlpha, 4);
     addParticleUpdater(sparks, alphaUpdater);
 
     Texture2D texture = LoadTexture("assets/particle/point-light.png");
@@ -123,7 +118,7 @@ ParticleSystem* ConstructShockWaveEffect(Vector3 center, ParticleSystem* parent)
     ParticleGenerator* sphericalGenerator = getSphericalGenerator(center, 1.0f, false);
     addParticleGenerator(emitter, sphericalGenerator);
 
-    ParticleGenerator* lifeTimeGenerator = getLifeTimeGenerator(0.3f, 0.6f);
+    ParticleGenerator* lifeTimeGenerator = getLifeTimeGenerator(0.4f, 0.4f);
     addParticleGenerator(emitter, lifeTimeGenerator);
 
     ParticleGenerator* sizeGenerator = getSizeGenerator(4.0f, 4.0f);
@@ -135,17 +130,14 @@ ParticleSystem* ConstructShockWaveEffect(Vector3 center, ParticleSystem* parent)
     ParticleUpdater* timeUpdater = getTimeUpdater();
     addParticleUpdater(shockWave, timeUpdater);
 
-    float cpxsSize[5] = { 0.00f, 0.12f, 0.18f, 0.26f, 1.00f };
-    float cpysSize[5] = { 0.00f, 0.54f, 0.65f, 0.75f, 1.00f };
-    ParticleUpdater* sizeUpdater = getSizeUpdater(cpxsSize, cpysSize, 5);
+    float cpxsSize[4] = { 0.00f, 0.38f, 0.56f, 1.00f };
+    float cpysSize[4] = { 0.00f, 0.80f, 0.92f, 1.00f };
+    ParticleUpdater* sizeUpdater = getSizeUpdater(cpxsSize, cpysSize, 4);
     addParticleUpdater(shockWave, sizeUpdater);
 
-    Vector2* controlPoints = malloc(sizeof(Vector2) * 4);
-    controlPoints[0] = (Vector2){0.0f, 0.0f};
-    controlPoints[1] = (Vector2){0.0f, 1.0f};
-    controlPoints[2] = (Vector2){0.0f, 1.5f};
-    controlPoints[3] = (Vector2){1.0f, 0.1f};
-    ParticleUpdater* alphaUpdater = getAlphaUpdater(controlPoints, 4);
+    float cpxsAlpha[5] = { 0.00f, 0.30f, 0.58f, 0.70f, 1.00f };
+    float cpysAlpha[5] = { 0.72f, 0.96f, 0.95f, 0.84f, 0.00f };
+    ParticleUpdater* alphaUpdater = getAlphaUpdater(cpxsAlpha, cpysAlpha, 4);
     addParticleUpdater(shockWave, alphaUpdater);
 
     Texture2D texture = LoadTexture("assets/particle/circle-glow.png");

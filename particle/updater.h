@@ -18,8 +18,13 @@ typedef struct BezierCurveData {
 ParticleUpdater* getNewtonUpdater();
 ParticleUpdater* getTimeUpdater();
 ParticleUpdater* getSizeUpdater();
-ParticleUpdater* getAlphaUpdater(Vector2*, int);
+ParticleUpdater* getAlphaUpdater(float*, float*, int);
 ParticleUpdater* getSizeUpdater(float*, float*, int);
+
+typedef struct AlphaUpdaterData {
+    CubicSpline spline;
+} AlphaUpdaterData;
+
 
 typedef struct SizeUpdaterData {
     CubicSpline spline;

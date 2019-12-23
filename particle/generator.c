@@ -117,6 +117,7 @@ void colorGenerator(ParticleData* particleData, int startId, int endId, Particle
     ColorGeneratorData* data = (ColorGeneratorData*) generator->generatorData;
 
     for (int i = startId; i < endId; i++) {
+        particleData->particles[i]._color = data->color;
         particleData->particles[i].color = data->color;
     }
 }

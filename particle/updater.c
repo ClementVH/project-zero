@@ -60,7 +60,7 @@ ParticleUpdater* getTimeUpdater() {
 }
 
 void alphaUpdater(ParticleData* particleData, ParticleUpdater* updater) {
-    BezierCurveData* data = (BezierCurveData*) updater->updaterData;
+    AlphaUpdaterData* data = (AlphaUpdaterData*) updater->updaterData;
 
     int endId = particleData->countAlive;
 
@@ -68,19 +68,19 @@ void alphaUpdater(ParticleData* particleData, ParticleUpdater* updater) {
 
     int systemID = updater->systemID;
     forParticlesInSystem(particleData->countAlive, particleData, systemID)
-        float x = particleData->particles[i].lifeTime / particleData->particles[i].maxLifeTime;
-        int closestIndex = findClosest(data->curveX, 1000, x);
-
-        particleData->particles[i].color.a = 255.0f * data->curveY[closestIndex];
+        float ratioLifeTime = particleData->particles[i].lifeTime / particleData->particles[i].maxLifeTime;
+        int indexCurveSpline = ratioLifeTime * 1000;
+        Particle* particle = &particleData->particles[i];
+        particle->color.a = particle->_color.a * data->spline.ys[indexCurveSpline];
     }
 }
 
-ParticleUpdater* getAlphaUpdater(Vector2* controlPoints, int nbControlPoints) {
-    BezierCurve curve = bezier(1000, 0.001f, nbControlPoints - 1, controlPoints);
+ParticleUpdater* getAlphaUpdater(float* cpxs, float* cpys, int nbControlPoints) {
+    AlphaUpdaterData* data = malloc(sizeof(SizeUpdaterData));
 
-    BezierCurveData* data = malloc(sizeof(BezierCurveData));
-    data->curveX = curve.curveX;
-    data->curveY = curve.curveY;
+    CubicSpline* spline = ConstructCubicSpline(nbControlPoints, cpxs, cpys);
+    data->spline = *spline;
+    free(spline);
 
     ParticleUpdater* updater = ConstructUpdater(&alphaUpdater, (intptr_t) data);
     return updater;
