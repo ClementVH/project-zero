@@ -100,6 +100,7 @@ void sizeGenerator(ParticleData* particleData, int startId, int endId, ParticleG
 
     for (int i = startId; i < endId; i++) {
         float size = ((float)rand()/(float)(RAND_MAX)) * interval + data->minSize;
+        particleData->particles[i]._size = size;
         particleData->particles[i].size = size;
     }
 }

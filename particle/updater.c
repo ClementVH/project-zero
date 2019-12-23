@@ -4,6 +4,7 @@
 #include "particle/particle.h"
 #include "utils/binary-search.h"
 #include "utils/bezier.h"
+#include "utils/cubic-spline.h"
 #include "particle/macros.h"
 
 #define forParticlesInSystem(endId, particleData, systemID) for(int i = 0; i < endId; i++) {\
@@ -23,7 +24,9 @@ ParticleUpdater* ConstructUpdater(void* update, intptr_t data) {
 void newtonUpdater(ParticleData* particleData, ParticleUpdater* updater) {
     int systemID = updater->systemID;
     forParticlesInSystem(particleData->countAlive, particleData, systemID)
-        particleData->particles[i].pos = Vector3Add(particleData->particles[i].pos, particleData->particles[i].vel);
+        Vector3 vel = particleData->particles[i].vel;
+        // vel = Vector3Multiply(vel, 0.1f);
+        particleData->particles[i].pos = Vector3Add(particleData->particles[i].pos, vel);
     }
 }
 
@@ -40,6 +43,7 @@ void timeUpdater(ParticleData* particleData, ParticleUpdater* updater) {
 
     int systemID = updater->systemID;
     forParticlesInSystem(particleData->countAlive, particleData, systemID)
+        // timeElapsed = timeElapsed / 10.0f;
         particleData->particles[i].lifeTime += timeElapsed;
 
         if (particleData->particles[i].lifeTime > particleData->particles[i].maxLifeTime) {
@@ -56,7 +60,7 @@ ParticleUpdater* getTimeUpdater() {
 }
 
 void alphaUpdater(ParticleData* particleData, ParticleUpdater* updater) {
-    AlphaUpdaterData* data = (AlphaUpdaterData*) updater->updaterData;
+    BezierCurveData* data = (BezierCurveData*) updater->updaterData;
 
     int endId = particleData->countAlive;
 
@@ -71,21 +75,41 @@ void alphaUpdater(ParticleData* particleData, ParticleUpdater* updater) {
     }
 }
 
-ParticleUpdater* getAlphaUpdater() {
-    AlphaUpdaterData* data = malloc(sizeof(AlphaUpdaterData));
+ParticleUpdater* getAlphaUpdater(Vector2* controlPoints, int nbControlPoints) {
+    BezierCurve curve = bezier(1000, 0.001f, nbControlPoints - 1, controlPoints);
 
-    Vector2* controlPoints = malloc(sizeof(Vector2) * 4);
-    controlPoints[0] = (Vector2){0.0f, 0.0f};
-    controlPoints[1] = (Vector2){0.0f, 1.0f};
-    controlPoints[2] = (Vector2){0.0f, 1.5f};
-    controlPoints[3] = (Vector2){1.0f, 0.1f};
-
-
-    BezierCurve curve = bezier(1000, 0.001f, 3, controlPoints);
-
+    BezierCurveData* data = malloc(sizeof(BezierCurveData));
     data->curveX = curve.curveX;
     data->curveY = curve.curveY;
 
     ParticleUpdater* updater = ConstructUpdater(&alphaUpdater, (intptr_t) data);
+    return updater;
+}
+
+void sizeUpdater(ParticleData* particleData, ParticleUpdater* updater) {
+    SizeUpdaterData* data = (SizeUpdaterData*) updater->updaterData;
+
+    int endId = particleData->countAlive;
+
+    if (endId == 0) return;
+
+    int systemID = updater->systemID;
+    forParticlesInSystem(particleData->countAlive, particleData, systemID)
+        float ratioLifeTime = particleData->particles[i].lifeTime / particleData->particles[i].maxLifeTime;
+        int indexCurveSpline = ratioLifeTime * 1000;
+        Particle* particle = &particleData->particles[i];
+        particle->size = particle->_size * data->spline.ys[indexCurveSpline];
+    }
+
+}
+
+ParticleUpdater* getSizeUpdater(float* cpxs, float* cpys, int nbControlPoints) {
+    SizeUpdaterData* data = malloc(sizeof(SizeUpdaterData));
+
+    CubicSpline* spline = ConstructCubicSpline(nbControlPoints, cpxs, cpys);
+    data->spline = *spline;
+    free(spline);
+
+    ParticleUpdater* updater = ConstructUpdater(&sizeUpdater, (intptr_t)data);
     return updater;
 }

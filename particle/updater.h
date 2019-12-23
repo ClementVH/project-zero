@@ -1,7 +1,8 @@
 #ifndef FILE_UPDATER_SEEN
 #define FILE_UPDATER_SEEN
-#include "particle/particle.h"
 #include <stdint.h>
+#include "particle/particle.h"
+#include "utils/cubic-spline.h"
 
 typedef struct ParticleUpdater {
     void (*update)(ParticleData*, struct ParticleUpdater*);
@@ -9,14 +10,19 @@ typedef struct ParticleUpdater {
     int systemID;
 } ParticleUpdater;
 
-ParticleUpdater* getNewtonUpdater();
-ParticleUpdater* getTimeUpdater();
-
-typedef struct AlphaUpdaterData {
+typedef struct BezierCurveData {
     float* curveX;
     float* curveY;
-} AlphaUpdaterData;
+} BezierCurveData;
 
-ParticleUpdater* getAlphaUpdater();
+ParticleUpdater* getNewtonUpdater();
+ParticleUpdater* getTimeUpdater();
+ParticleUpdater* getSizeUpdater();
+ParticleUpdater* getAlphaUpdater(Vector2*, int);
+ParticleUpdater* getSizeUpdater(float*, float*, int);
+
+typedef struct SizeUpdaterData {
+    CubicSpline spline;
+} SizeUpdaterData;
 
 #endif

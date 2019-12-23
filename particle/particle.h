@@ -10,7 +10,10 @@ typedef struct Particle {
     Vector3 vel;
     Vector3 acc;
     bool alive;
+
+    float _size;
     float size;
+
     float rotation;
     float cameraDistance;
     float maxLifeTime;

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <time.h>
 #include "raylib.h"
+#include "rlgl.h"
 #include "player/player.h"
 #include "particle/system.h"
 #include "particle/renderer.h"
@@ -9,6 +10,8 @@
 #include "particle/updater.h"
 #include "particle/generator.h"
 #include "effects/hit.h"
+#include "utils/cubic-spline.h"
+#include "glad.h"
 
 int main()
 {
@@ -28,7 +31,7 @@ int main()
     Camera* camera = player->camera;
     Model model = player->model;
 
-    int blending = BLEND_ALPHA;
+    int blending = BLEND_ADDITIVE;
 
     ParticleSystem* system = ConstructHitEffect(Vector3One());
 
@@ -38,6 +41,10 @@ int main()
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC keyZZ
     {
+        if (IsMouseButtonPressed(0)) {
+            system = ConstructHitEffect(Vector3One());
+        }
+
         UpdatePlayer(player);
         updateParticleSystem(system);
         sortParticles(system, *camera);
@@ -49,17 +56,17 @@ int main()
             ClearBackground(BLACK);
 
             BeginMode3D(*camera);
-                // DrawGrid(50, 1.0f);
+                rlEnableDepthTest();
+
+                DrawGrid(50, 1.0f);
                 // DrawPlayer(player);
 
+                glDepthMask(GL_FALSE);
                 BeginBlendMode(blending);
                     renderParticleSystem(*camera, system);
-                    // ParticleData* particleData = system->particleData;
-                    // for (int i = 0; i < particleData->countAlive; i++) {
-                    //     Particle particle = particleData->particles[i];
-                    //     DrawParticle(*camera, particleTexture, particle.pos, particle.size, particle.color);
-                    // }
                 EndBlendMode();
+                glDepthMask(GL_TRUE);
+
             EndMode3D();
 
             DrawFPS(10, 10);
